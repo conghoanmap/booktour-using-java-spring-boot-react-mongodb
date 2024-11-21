@@ -7,6 +7,7 @@ import OtherTours from "../components/OtherTours";
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 import DiscountService from "../services/DiscountService";
 import { GlobalContext } from "../contexts/GlobalProvider";
+import AirportTransferSearchBox from "../components/AirportTransferSearchBox";
 
 const tabs = [
   {
@@ -26,6 +27,12 @@ const tabs = [
     header: "Lựa chọn những khánh sạn làm cho bạn cảm thấy thoải mái",
     title: "Khách sạn",
     component: HotelSearchBox,
+  },
+  {
+    image: "/src/assets/img/flights/1.png",
+    header: "Giúp bạn di chuyển một cách thuận tiện và nhanh chóng",
+    title: "Đưa đón sân bay",
+    component: AirportTransferSearchBox,
   },
 ];
 

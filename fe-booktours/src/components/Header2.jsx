@@ -35,11 +35,26 @@ const user = {
 };
 const navigation = [
   { name: "Trang chủ", href: "/" },
-  { name: "Tour", href: "/tours" },
+  {
+    name: "Du lịch",
+    href: "/tours",
+    subItems: [
+      { name: "Miền Bắc", href: "/tours?region=Miền Bắc" },
+      { name: "Miền Trung", href: "/tours?region=Miền Trung" },
+      { name: "Miền Nam", href: "/tours?region=Miền Nam" },
+    ],
+  },
   { name: "Vé máy bay", href: "#" },
   { name: "Khách sạn", href: "#" },
-  { name: "Giới thiệu", href: "/about" },
-  { name: "Liên hệ", href: "/contact" },
+  {
+    name: "Xem thêm",
+    href: "/contact",
+    subItems: [
+      { name: "Giới thiệu", href: "/about" },
+      { name: "Liên hệ", href: "/contact" },
+      { name: "Những câu hỏi thường gặp", href: "/faq" },
+    ],
+  },
 ];
 
 const userNavigation = [
@@ -149,15 +164,60 @@ const Header2 = () => {
               aria-label="Global"
               className="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4"
             >
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="px-3 py-2 text-gray-900 text-sm font-medium"
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navigation.map((item) =>
+                // <Link
+                //   key={item.name}
+                //   to={item.href}
+                //   className="px-3 py-2 text-gray-900 text-sm font-medium"
+                // >
+                //   {item.name}
+                // </Link>
+                item.subItems ? (
+                  <Menu as="div" key={item.name} className="relative">
+                    <div>
+                      <MenuButton className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
+                        <span className="sr-only">Open user menu</span>
+                        <p className="px-3 py-2 text-gray-900 text-sm font-medium">
+                          {item.name}
+                        </p>
+                      </MenuButton>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <MenuItems className="z-10 origin-top-right absolute left-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {item.subItems.map((itemm) => (
+                          <MenuItem key={itemm.name} as="div">
+                            <Link
+                              to={itemm.href}
+                              className={classNames(
+                                // active ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-sky-800 duration-300"
+                              )}
+                            >
+                              {itemm.name}
+                            </Link>
+                          </MenuItem>
+                        ))}
+                      </MenuItems>
+                    </Transition>
+                  </Menu>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="px-3 py-2 text-gray-900 text-sm font-medium"
+                  >
+                    {item.name}
+                  </Link>
+                )
+              )}
             </nav>
           </div>
           <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
@@ -173,7 +233,7 @@ const Header2 = () => {
                   />
                 </div>
                 <input
-                disabled
+                  disabled
                   id="search"
                   name="search"
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white shadow-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-sky-600 focus:border-sky-600 sm:text-sm"
@@ -191,7 +251,7 @@ const Header2 = () => {
             </PopoverButton>
           </div>
           <Transition as={Fragment}>
-            <div className="lg:hidden">
+            <div className="lg:hidden z-10">
               <TransitionChild
                 as={Fragment}
                 enter="duration-150 ease-out"
@@ -238,15 +298,27 @@ const Header2 = () => {
                         </div>
                       </div>
                       <div className="mt-3 px-2 space-y-1">
-                        {navigation.map((item) => (
-                          <Link
-                            key={item.name}
-                            to={item.href}
-                            className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
+                        {navigation.map((item) =>
+                          item.subItems && !item.href.includes("/tours") ? (
+                            item.subItems.map((itemm) => (
+                              <Link
+                                key={itemm.name}
+                                to={itemm.href}
+                                className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
+                              >
+                                {itemm.name}
+                              </Link>
+                            ))
+                          ) : (
+                            <Link
+                              key={item.name}
+                              to={item.href}
+                              className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
+                            >
+                              {item.name}
+                            </Link>
+                          )
+                        )}
                       </div>
                     </div>
                     <div className="pt-4 pb-2">

@@ -20,6 +20,7 @@ import {
   TicketIcon,
   TagIcon,
 } from "@heroicons/react/outline";
+import { FiHardDrive } from "react-icons/fi";
 import { BellIcon, MenuAlt2Icon, SearchIcon } from "@heroicons/react/solid";
 import { Link, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../contexts/GlobalProvider";
@@ -40,9 +41,17 @@ const navigation = [
   },
   { name: "Vé máy bay(chưa hoàn thiện)", href: "#", icon: TicketIcon },
   { name: "Khách sạn(chưa hoàn thiện)", href: "#", icon: OfficeBuildingIcon },
+  { name: "Đưa đón sân bay", href: "/admin/airport-transfer-management", icon: FiHardDrive},
   { name: "Người dùng", href: "/admin/user-management", icon: UsersIcon },
-  { name: "Reports(chưa hoàn thiện)", href: "#", icon: ChartBarIcon },
-  { name: "Dịch vụ giảm giá", href: "/admin/discount-management", icon: TagIcon ,
+  {
+    name: "Reports",
+    href: "/admin/tour-report",
+    icon: ChartBarIcon,
+  },
+  {
+    name: "Dịch vụ giảm giá",
+    href: "/admin/discount-management",
+    icon: TagIcon,
     children: [
       { name: "Tạo dịch vụ mới", href: "/admin/discount-create" },
       // { name: "Xóa", href: "#" },
@@ -206,7 +215,7 @@ const Siderbar = ({ children }) => {
                 </nav>
               </div>
               <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-                <Link to="#" className="flex-shrink-0 group block">
+                <Link to="/setting?nav=1" className="flex-shrink-0 group block">
                   <div className="flex items-center">
                     <div>
                       <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
@@ -223,12 +232,9 @@ const Siderbar = ({ children }) => {
                       <p className="text-base font-medium text-gray-700 group-hover:text-gray-900">
                         {context.profile?.name}
                       </p>
-                      <Link
-                        to="/setting?nav=1"
-                        className="text-sm font-medium text-gray-500 group-hover:text-gray-700"
-                      >
+                      <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
                         Trang cá nhân
-                      </Link>
+                      </p>
                     </div>
                   </div>
                 </Link>
@@ -316,7 +322,10 @@ const Siderbar = ({ children }) => {
             </nav>
           </div>
           <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-            <Link to="#" className="flex-shrink-0 w-full group block">
+            <Link
+              to="/setting?nav=1"
+              className="flex-shrink-0 w-full group block"
+            >
               <div className="flex items-center">
                 <div>
                   <span className="inline-block h-9 w-9 rounded-full overflow-hidden bg-gray-100">
@@ -333,12 +342,9 @@ const Siderbar = ({ children }) => {
                   <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                     {context.profile?.name}
                   </p>
-                  <Link
-                    to="/setting?nav=1"
-                    className="text-xs font-medium text-gray-500 group-hover:text-gray-700"
-                  >
+                  <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
                     Trang cá nhân
-                  </Link>
+                  </p>
                 </div>
               </div>
             </Link>

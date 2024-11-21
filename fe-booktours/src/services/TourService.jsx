@@ -209,8 +209,107 @@ export default class TourService {
   // 10 tour được đặt nhiều nhất
   static async getTop10BookedTours() {
     try {
+      const response = await axios.get(`${this.ADMIN_URL}/top-booked-tours`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async payment(tourId, bookingCode, payment) {
+    try {
+      const response = await axios.post(
+        `${this.BASE_URL}/payment/${tourId}/${bookingCode}`,
+        payment,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Lấy số lượng đặt tour theo từng miền
+  static async getBookedToursByRegion() {
+    try {
       const response = await axios.get(
-        `${this.ADMIN_URL}/top-booked-tours`,
+        `${this.ADMIN_URL}/total-booked-tours-by-region`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Lượng đặt tour trong 7 ngày gần nhất
+  static async getBookedTourOf7Days() {
+    try {
+      const response = await axios.get(
+        `${this.ADMIN_URL}/total-booking-of-7-days`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // 5 tour có lượt đánh giá tích cực
+  static async getTop5TourWithPositiveReview() {
+    try {
+      const response = await axios.get(
+        `${this.ADMIN_URL}/top-positive-rating-tours`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Lấy tổng doanh thu trong n ngày gần nhất
+  static async getTotalRevenue(days) {
+    try {
+      const response = await axios.get(
+        `${this.ADMIN_URL}/total-revenue?days=${days}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Tour được đặt nhiều nhất trong tháng
+  static async getTopBookedTourInMonth() {
+    try {
+      const response = await axios.get(
+        `${this.ADMIN_URL}/max-booked-tour-of-month`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

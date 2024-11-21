@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.be_booktours.dtos.account.ChangePasswordRequest;
 import com.spring.be_booktours.dtos.account.ChangeProfileRequest;
+import com.spring.be_booktours.dtos.account.Contact;
 import com.spring.be_booktours.dtos.account.LoginRequest;
 import com.spring.be_booktours.dtos.account.RegisterRequest;
 import com.spring.be_booktours.services.UserService;
@@ -83,6 +84,11 @@ public class AccountController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         return ResponseEntity.ok(userService.UpdateProfile(email, changeProfileRequest));
+    }
+
+    @PostMapping("/contact")
+    public ResponseEntity<?> contact(@Valid @RequestBody Contact contact) {
+        return ResponseEntity.ok(userService.Contact(contact));
     }
 
 }

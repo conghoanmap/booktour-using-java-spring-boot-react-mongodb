@@ -4,11 +4,15 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import com.spring.be_booktours.dtos.account.Contact;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -40,5 +44,15 @@ public class EmailSenderService {
         } catch (MessagingException e) {
             logger.error("Error sending email: " + e.getMessage());
         }
+    }
+
+    public void sendContact(Contact contact) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(contact.getEmail());
+        message.setTo("hoan39800@gmail.com");
+        message.setSubject("Be Book Tours - Thông báo từ khách hàng");
+        message.setText(
+                "Thông báo từ khách hàng: " + contact.getFullName() + "\n" + "Nội dung: " + contact.getMessage());
+        javaMailSender.send(message);
     }
 }

@@ -24,8 +24,11 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.spring.be_booktours.dtos.MyResponse;
+import com.spring.be_booktours.dtos.result_queries.MaxBookedTourOfMonth;
 import com.spring.be_booktours.dtos.result_queries.RankBookedTour;
 import com.spring.be_booktours.dtos.result_queries.RevenueOfDay;
+import com.spring.be_booktours.dtos.result_queries.ReviewTour;
+import com.spring.be_booktours.dtos.result_queries.TotalBookingOfRegion;
 import com.spring.be_booktours.dtos.result_queries.TourRevenue;
 import com.spring.be_booktours.dtos.tour.DefaultTour;
 import com.spring.be_booktours.entities.AppUser;
@@ -34,10 +37,13 @@ import com.spring.be_booktours.entities.Tour;
 import com.spring.be_booktours.entities.sub_entities.BookTour;
 import com.spring.be_booktours.entities.sub_entities.BookingHistory;
 import com.spring.be_booktours.entities.sub_entities.Itinerary;
+import com.spring.be_booktours.entities.sub_entities.Payment;
 import com.spring.be_booktours.entities.sub_entities.Review;
+import com.spring.be_booktours.entities.views.totalBookedOf7Days;
 import com.spring.be_booktours.helpers.QueryObject;
 import com.spring.be_booktours.repositories.AppUserRepository;
 import com.spring.be_booktours.repositories.DiscountRepository;
+import com.spring.be_booktours.repositories.totalBookedOf7DaysRepository;
 import com.spring.be_booktours.repositories.TourRepository;
 import com.spring.be_booktours.utils.TourUtils;
 
@@ -45,6 +51,8 @@ import com.spring.be_booktours.utils.TourUtils;
 @Transactional
 public class TourService {
 
+    @Autowired
+    private totalBookedOf7DaysRepository totalBookedOf7DaysRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
@@ -57,10 +65,9 @@ public class TourService {
 
     // Customer method
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public MyResponse<List<Tour>> getTours(QueryObject queryObject) {
         MyResponse<List<Tour>> response = new MyResponse<>();
-        List tours = new ArrayList<>();
+        List<Tour> tours = new ArrayList<>();
         Query query = new Query();
 
         if (queryObject.getRegion().length() > 0) {
@@ -148,7 +155,7 @@ public class TourService {
                 return response;
             }
             // Kiểm tra ngày đã hết hạn đăng ký chưa
-            if (tour.getDepartureDates().iterator().next().before(new Date())) {
+            if (bookTour.getDepartureDate().before(new Date())) {
                 response.setStatus(400);
                 response.setMessage("Tour đã hết hạn đăng ký");
                 return response;
@@ -458,9 +465,9 @@ public class TourService {
         MyResponse<List<TourRevenue>> response = new MyResponse<>();
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.unwind("bookTours"),
-                // $group: {
-                // _id: { tourId: "$_id", tourName: "$tourName" },
-                // totalRevenue: { $sum: "$bookTours.totalPrice" }
+                // : {
+                // _id: { tourId: "", tourName: "" },
+                // totalRevenue: { : ".totalPrice" }
                 // }
                 Aggregation.group("tourId", "tourName").sum("bookTours.totalPrice").as("totalRevenue"),
                 Aggregation.sort(Sort.by(Sort.Direction.DESC, "totalRevenue")),
@@ -529,40 +536,24 @@ public class TourService {
         return response;
     }
 
-    public MyResponse<List<RevenueOfDay>> getRevenueByDay(int days) {
-        MyResponse<List<RevenueOfDay>> response = new MyResponse<>();
+    // Tính doanh thu trong n ngày gần nhất
+    public MyResponse<RevenueOfDay> getRevenueByDay(int days) {
+        MyResponse<RevenueOfDay> response = new MyResponse<>();
         // n ngày trước tính từ hiện tại
         LocalDate numberDaysAgo = LocalDate.now().minusDays(days);
         Date numberDaysAgoDate = Date.from(numberDaysAgo.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        // Xây dựng pipeline
-        UnwindOperation unwind = Aggregation.unwind("bookTours");
-
-        MatchOperation match = Aggregation.match(Criteria.where("bookTours.bookingDate")
-                .gte(numberDaysAgoDate).lte(new Date()));
-
-        ProjectionOperation project = Aggregation.project("bookTours.totalPrice")
-                .andExpression("dateToString('%Y-%m-%d', bookTours.bookingDate)").as("revenueDate");
-
         Aggregation aggregation = Aggregation.newAggregation(
-                unwind,
-                match,
-                project,
-                Aggregation.group("revenueDate")
-                        .sum("bookTours.totalPrice").as("totalRevenue"),
-                Aggregation.project("totalRevenue").and("_id").as("revenueDate"),
-                Aggregation.sort(Sort.by(Sort.Direction.ASC, "revenueDate")));
+                Aggregation.unwind("bookTours"),
+                Aggregation.match(Criteria.where("bookTours.bookingDate").gte(numberDaysAgoDate)),
+                Aggregation.group("bookTours.bookingDate").sum("bookTours.totalPrice").as("revenue"),
+                Aggregation.project("revenue").and("bookTours.bookingDate").as("day"));
 
         AggregationResults<RevenueOfDay> results = mongoTemplate.aggregate(aggregation, "tours", RevenueOfDay.class);
-        List<RevenueOfDay> revenueOfDays = results.getMappedResults();
-        if (revenueOfDays.size() == 0) {
-            response.setStatus(404);
-            response.setMessage("Không lấy được danh sách");
-        } else {
-            response.setStatus(200);
-            response.setMessage("Lấy danh sách doanh thu thành công");
-            response.setData(revenueOfDays);
-        }
+        RevenueOfDay revenueOfDays = results.getUniqueMappedResult();
+        response.setStatus(200);
+        response.setMessage("Lấy danh sách doanh thu thành công");
+        response.setData(revenueOfDays);
         return response;
     }
 
@@ -592,5 +583,124 @@ public class TourService {
         }
         return response;
     }
+
+    public MyResponse<?> paymentTour(String email, String tourId, String bookingCode, Payment payment) {
+        MyResponse<?> response = new MyResponse<>();
+
+        // Kiểm tra tour tồn tại
+        Tour tour = tourRepository.findById(tourId).orElse(null);
+        if (tour == null) {
+            response.setStatus(404);
+            response.setMessage("Không tìm thấy tour");
+            return response;
+        }
+        // Tìm bookTour
+        BookTour bookTour = tour.getBookTours().stream().filter(item -> item.getBookingCode().equals(bookingCode))
+                .findFirst().orElse(null);
+        if (bookTour == null) {
+            response.setStatus(404);
+            response.setMessage("Không tìm thấy thông tin đặt tour");
+            return response;
+        }
+
+        payment.setPaymentId(TourUtils.generatePaymentId(email));
+        payment.setPaymentDate(new Date());
+
+        bookTour.setPayment(payment);
+        tourRepository.save(tour);
+
+        response.setStatus(200);
+        response.setMessage("Thanh toán tour thành công");
+        return response;
+    }
+
+    public MyResponse<List<TotalBookingOfRegion>> getTotalBookedToursByRegion() {
+        MyResponse<List<TotalBookingOfRegion>> response = new MyResponse<>();
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.unwind("bookTours"),
+                Aggregation.group("location.regionName")
+                        .count().as("totalBooking"),
+                Aggregation.project("totalBooking")
+                        .and("_id").as("regionName"));
+
+        AggregationResults<TotalBookingOfRegion> results = mongoTemplate.aggregate(aggregation, "tours",
+                TotalBookingOfRegion.class);
+        List<TotalBookingOfRegion> totalBookingOfRegions = results.getMappedResults();
+        if (totalBookingOfRegions.size() == 0) {
+            response.setStatus(404);
+            response.setMessage("Không lấy được danh sách");
+        } else {
+            response.setStatus(200);
+            response.setMessage("Lấy danh sách số lượng tour đã đặt theo miền thành công");
+            response.setData(totalBookingOfRegions);
+        }
+        return response;
+    }
+
+    public MyResponse<List<ReviewTour>> getTopPositiveRatingTours() {
+        MyResponse<List<ReviewTour>> response = new MyResponse<>();
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.unwind("reviews"),
+                Aggregation.group("tourName", "tourType", "price")
+                        .avg("reviews.rating").as("averageRating"),
+                Aggregation.match(Criteria.where("averageRating").gte(3)),
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "averageRating")),
+                Aggregation.limit(5),
+                Aggregation.project("averageRating")
+                        .and("tourName").as("tourName")
+                        .and("tourType").as("tourType")
+                        .and("price").as("price"));
+
+        AggregationResults<ReviewTour> results = mongoTemplate.aggregate(aggregation, "tours", ReviewTour.class);
+        List<ReviewTour> tours = results.getMappedResults();
+        if (tours.size() == 0) {
+            response.setStatus(404);
+            response.setMessage("Không lấy được danh sách");
+        } else {
+            response.setStatus(200);
+            response.setMessage("Lấy danh sách tour có đánh giá tích cực nhất thành công");
+            response.setData(tours);
+        }
+        return response;
+    }
+
+    public MyResponse<List<totalBookedOf7Days>> gettotalBookedOf7Days() {
+        MyResponse<List<totalBookedOf7Days>> response = new MyResponse<>();
+        List<totalBookedOf7Days> bookingOf7Days = totalBookedOf7DaysRepository.findAll();
+        if (bookingOf7Days.size() == 0) {
+            response.setStatus(404);
+            response.setMessage("Không lấy được danh sách");
+        } else {
+            response.setStatus(200);
+            response.setMessage("Lấy danh sách lượng đặt tour trong ngày gần nhất thành công");
+            response.setData(bookingOf7Days);
+        }
+        return response;
+    }
+
+    public MyResponse<MaxBookedTourOfMonth> getMaxBookedTourOfMonth() {
+        MyResponse<MaxBookedTourOfMonth> response = new MyResponse<>();
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.unwind("bookTours"),
+                Aggregation.group("tourName")
+                        .count().as("totalBookings"),
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "totalBookings")),
+                Aggregation.limit(1),
+                Aggregation.project("totalBookings")
+                        .and("_id").as("_id"));
+        
+        AggregationResults<MaxBookedTourOfMonth> results = mongoTemplate.aggregate(aggregation, "tours", MaxBookedTourOfMonth.class);
+        MaxBookedTourOfMonth maxBookedTourOfMonth = results.getUniqueMappedResult();
+        if (maxBookedTourOfMonth == null) {
+            response.setStatus(404);
+            response.setMessage("Không lấy được tour được đặt nhiều nhất trong tháng");
+        } else {
+            response.setStatus(200);
+            response.setMessage("Lấy tour được đặt nhiều nhất trong tháng thành công");
+            response.setData(maxBookedTourOfMonth);
+        }
+        return response;
+    }   
 
 }

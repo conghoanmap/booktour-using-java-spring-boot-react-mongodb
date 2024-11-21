@@ -62,7 +62,7 @@ public class AdminTourController {
         return ResponseEntity.ok(tourService.getTotalBookedTours(days));
     }
 
-    // Tính doanh thu của từng ngày trong n ngày gần nhất
+    // Tính doanh thu trong n ngày gần nhất
     @GetMapping("/revenue-by-day")
     public ResponseEntity<?> getRevenueByDay(@RequestParam(defaultValue = "7", required = false) int days
     ) {
@@ -73,6 +73,30 @@ public class AdminTourController {
     @GetMapping("/top-booked-tours")
     public ResponseEntity<?> getTopBookedTours() {
         return ResponseEntity.ok(tourService.getTopBookedTours());
+    }
+
+    // Đếm số lượng đặt tour theo từng miền
+    @GetMapping("/total-booked-tours-by-region")
+    public ResponseEntity<?> getTotalBookedToursByRegion() {
+        return ResponseEntity.ok(tourService.getTotalBookedToursByRegion());
+    }
+
+    // Doanh thu trong 7 ngày gần nhất
+    @GetMapping("/total-booking-of-7-days")
+    public ResponseEntity<?> gettotalBookedOf7Days() {
+        return ResponseEntity.ok(tourService.gettotalBookedOf7Days());
+    }
+
+    // Lọc ra 5 tour có đánh giá tích cực nhất
+    @GetMapping("/top-positive-rating-tours")
+    public ResponseEntity<?> getTopPositiveRatingTours() {
+        return ResponseEntity.ok(tourService.getTopPositiveRatingTours());
+    }
+
+    // Tour được đặt nhiều nhất trong tháng
+    @GetMapping("/max-booked-tour-of-month")
+    public ResponseEntity<?> getMaxBookedTourOfMonth() {
+        return ResponseEntity.ok(tourService.getMaxBookedTourOfMonth());
     }
 
 }

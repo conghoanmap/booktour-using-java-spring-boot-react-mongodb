@@ -5,50 +5,88 @@ import {
   RadioGroupLabel,
   RadioGroupOption,
 } from "@headlessui/react";
-import TourCard2 from "../components/TourCard2";
-import formatPrice from "../utils/format-price";
 import { CheckCircleIcon } from "@heroicons/react/outline";
+import VnPayService from "../services/VnPaySerivce";
+import { useNavigate, useParams } from "react-router-dom";
+import TourService from "../services/TourService";
+import formatPrice from "../utils/format-price";
 
-const paymentMethods = [
-  { id: "credit-card", title: "Credit card" },
-  { id: "paypal", title: "PayPal" },
-  { id: "etransfer", title: "eTransfer" },
-];
-const deliveryMethods = [
-  {
-    id: 1,
-    title: "Standard",
-    turnaround: "4–10 business days",
-    price: "$5.00",
-  },
-  { id: 2, title: "Express", turnaround: "2–5 business days", price: "$16.00" },
-];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 const Payment = () => {
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
-    deliveryMethods[0]
-  );
-  const [tour, setTour] = useState({});
+  const navigate = useNavigate();
+  const { tourId, bookingCode } = useParams();
+  const [qrCode, setQrCode] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [confirmation, setConfirmation] = useState({
+    code: "",
+    error: "",
+  });
   useEffect(() => {
     document.title = "Thanh toán";
-    window.scrollTo(0, 0);
-    
-    const fetchTour = async () => {
+
+    const createQRCode = async (totalPrice) => {
       try {
-        const response = await TourService.getTourById(tourId);
-        // console.log(response);
-        if (response.status === 200) {
-          setTour(response.data);
-          document.title = `Thanh toán tour: ${response.data?.tourName}`;
-        }
+        const response = await VnPayService.createQRCode({
+          acqId: "970415", // Ngân hàng vietinbank
+          accountNo: "106876415729", // Số tài khoản của teo
+          accountName: "LE NGUYEN CONG HOAN", // Tên tài khoản của teo
+          amount: totalPrice, // Số tiền
+          format: "text",
+          template: "compact",
+        });
+        console.log("QR code: ", response);
+        setQrCode(
+          response.data?.qrDataURL.replace("data:image/png;base64,", "")
+        );
+        // console.log("QR code: ", response.data?.qrDataURL.replace("data:image/png;base64,", ""));
       } catch (error) {
-        console.error(error);
+        console.error("Failed to create QR code: ", error);
       }
     };
-    fetchTour();
+
+    const fetchBooking = async () => {
+      try {
+        const response = await TourService.getBookTour(tourId, bookingCode);
+        console.log(response.data);
+        if (response.status === 200) {
+          const totalPrice = response.data?.totalPrice;
+          setTotalPrice(totalPrice);
+          createQRCode(totalPrice);
+        }
+      } catch (error) {
+        console.error("Failed to fetch booking: ", error);
+      }
+    };
+    fetchBooking();
   }, []);
+
+  const handlePayment = async () => {
+    try {
+      const response = await TourService.payment(tourId, bookingCode, {
+        paymentMethod: "Thanh toán trực tuyến",
+        paymentStatus: "Đã thanh toán",
+        confirmationPaymentCode: confirmation.code, // Mã xác nhận thanh toán
+        paymentAmount: totalPrice, // Số tiền thanh toán
+        paymentNote: `Thanh toán QR cho đơn đặt tour ${bookingCode}, số tiền ${formatPrice(
+          totalPrice
+        )}`, // Ghi chú
+      });
+      // console.log(response);
+      if (response.status === 200) {
+        navigate(`/booktour-detail/${tourId}/${bookingCode}`);
+      }
+    } catch (error) {
+      console.error("Failed to confirm payment: ", error);
+      setConfirmation({
+        ...confirmation,
+        error:
+          error.response?.data?.confirmationPaymentCode ||
+          "Xác nhận thanh toán thất bại",
+      });
+    }
+  };
   return (
     <main className="my-7 bg-white max-w-7xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:max-w-none">
@@ -63,181 +101,50 @@ const Payment = () => {
               </h2>
 
               <div className="mt-10 border-t border-gray-200 pt-10">
-                <RadioGroup
-                  value={selectedDeliveryMethod}
-                  onChange={setSelectedDeliveryMethod}
-                >
-                  <RadioGroupLabel className="text-lg font-medium text-gray-900">
-                    Delivery method
-                  </RadioGroupLabel>
-
-                  <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                    {deliveryMethods.map((deliveryMethod) => (
-                      <RadioGroupOption
-                        key={deliveryMethod.id}
-                        value={deliveryMethod}
-                        className={({ checked, active }) =>
-                          classNames(
-                            checked ? "border-transparent" : "border-gray-300",
-                            active ? "ring-2 ring-sky-500" : "",
-                            "relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none"
-                          )
-                        }
-                      >
-                        {({ checked, active }) => (
-                          <>
-                            <div className="flex-1 flex">
-                              <div className="flex flex-col">
-                                <RadioGroup.Label
-                                  as="span"
-                                  className="block text-sm font-medium text-gray-900"
-                                >
-                                  {deliveryMethod.title}
-                                </RadioGroup.Label>
-                                <RadioGroup.Description
-                                  as="span"
-                                  className="mt-1 flex items-center text-sm text-gray-500"
-                                >
-                                  {deliveryMethod.turnaround}
-                                </RadioGroup.Description>
-                                <RadioGroup.Description
-                                  as="span"
-                                  className="mt-6 text-sm font-medium text-gray-900"
-                                >
-                                  {deliveryMethod.price}
-                                </RadioGroup.Description>
-                              </div>
-                            </div>
-                            {checked ? (
-                              <CheckCircleIcon
-                                className="h-5 w-5 text-sky-600"
-                                aria-hidden="true"
-                              />
-                            ) : null}
-                            <div
-                              className={classNames(
-                                active ? "border" : "border-2",
-                                checked
-                                  ? "border-sky-500"
-                                  : "border-transparent",
-                                "absolute -inset-px rounded-lg pointer-events-none"
-                              )}
-                              aria-hidden="true"
-                            />
-                          </>
-                        )}
-                      </RadioGroupOption>
-                    ))}
-                  </div>
-                </RadioGroup>
+                <h2 className="text-3xl font-semibold text-center mt-4 mb-4">
+                  Quét mã QR để thanh toán
+                </h2>
+                <div className="flex">
+                  <img
+                    src={`data:image/png;base64,${qrCode}`}
+                    alt="QR Code"
+                    className="mx-auto w-[300px] h-[300px]"
+                  />
+                </div>
               </div>
-              <div className="mt-10 border-t border-gray-200 pt-10">
-                <h2 className="text-lg font-medium text-gray-900">Payment</h2>
-
-                <fieldset className="mt-4">
-                  <legend className="sr-only">Payment type</legend>
-                  <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
-                    {paymentMethods.map((paymentMethod, paymentMethodIdx) => (
-                      <div key={paymentMethod.id} className="flex items-center">
-                        {paymentMethodIdx === 0 ? (
-                          <input
-                            id={paymentMethod.id}
-                            name="payment-type"
-                            type="radio"
-                            defaultChecked
-                            className="focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300"
-                          />
-                        ) : (
-                          <input
-                            id={paymentMethod.id}
-                            name="payment-type"
-                            type="radio"
-                            className="focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300"
-                          />
-                        )}
-
-                        <label
-                          htmlFor={paymentMethod.id}
-                          className="ml-3 block text-sm font-medium text-gray-700"
-                        >
-                          {paymentMethod.title}
-                        </label>
-                      </div>
-                    ))}
+              <div className="flex">
+                <div className="w-[384px] mx-auto">
+                  <label
+                    htmlFor="corfirmation"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Mã giao dịch
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
+                      placeholder="Nhập mã giao dịch để xác nhận"
+                      value={confirmation.code}
+                      onChange={(e) =>
+                        setConfirmation({
+                          ...confirmation,
+                          code: e.target.value,
+                        })
+                      }
+                    />
+                    <span className="text-red-500 text-sm">
+                      {confirmation.error}
+                    </span>
                   </div>
-                </fieldset>
-
-                <div className="mt-6 grid grid-cols-4 gap-y-6 gap-x-4">
-                  <div className="col-span-4">
-                    <label
-                      htmlFor="card-number"
-                      className="block text-sm font-medium text-gray-700"
+                  <div className="flex mt-1">
+                    <button
+                      type="button"
+                      className="ml-auto inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-sky-600 text-base font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:w-auto sm:text-sm"
+                      onClick={handlePayment}
                     >
-                      Card number
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="card-number"
-                        name="card-number"
-                        autoComplete="cc-number"
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-span-4">
-                    <label
-                      htmlFor="name-on-card"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Name on card
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        id="name-on-card"
-                        name="name-on-card"
-                        autoComplete="cc-name"
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-span-3">
-                    <label
-                      htmlFor="expiration-date"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Expiration date (MM/YY)
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="expiration-date"
-                        id="expiration-date"
-                        autoComplete="cc-exp"
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="cvc"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      CVC
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        type="text"
-                        name="cvc"
-                        id="cvc"
-                        autoComplete="csc"
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                      />
-                    </div>
+                      Xác nhận
+                    </button>
                   </div>
                 </div>
               </div>

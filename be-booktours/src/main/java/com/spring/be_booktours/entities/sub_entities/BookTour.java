@@ -28,5 +28,5 @@ public class BookTour {
     private Booker booker; // Người đặt tour
     private Set<TourService> tourServices = new HashSet<>(); // Danh sách dịch vụ đi kèm
     private boolean isConfirmed; // Trạng thái xác nhận
-    private String paymentMethod; // Phương thức thanh toán
+    private Payment payment; // Thông tin thanh toán
 }

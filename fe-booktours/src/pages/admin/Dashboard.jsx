@@ -69,7 +69,7 @@ const Dashboard = () => {
           <div className="mt-8">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-lg leading-6 font-medium text-gray-900">
-                Thông số đáng chú ý
+                Thông số đáng chú ý trong tuần qua
               </h2>
               <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -84,7 +84,7 @@ const Dashboard = () => {
                       <div className="ml-5 w-0 flex-1">
                         <dl>
                           <dt className="text-sm font-medium text-gray-500 truncate">
-                            Doanh thu tuần này
+                            Doanh thu
                           </dt>
                           <dd>
                             <div className="text-lg font-medium text-gray-900">

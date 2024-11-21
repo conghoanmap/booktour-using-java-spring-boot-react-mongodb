@@ -25,6 +25,11 @@ import Payment from "./pages/Payment";
 import VerifyEmail from "./pages/VerifyEmail";
 import DiscountManager from "./pages/admin/DiscountManager";
 import DiscountCreate from "./components/DiscountCreate";
+import TourReport from "./pages/admin/TourReport";
+import Faq from "./pages/Faq";
+import AirportTransferManager from "./pages/admin/AirportTransferManager";
+import AirportTransferEdit from "./pages/admin/AirportTransferEdit";
+import DetailAirportTransfer from "./pages/DetailAirportTransfer";
 
 function App() {
   const context = useContext(GlobalContext);
@@ -37,11 +42,13 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/faq" element={<Faq />} />
         <Route path="/tours" element={<Tours />} />
         <Route
           path="/tour-detail/:tourId"
           element={<TourDetail roles={context?.roles} isAuthenticated={context.isAuthenticated} verifiedEmail={context.profile?.verifiedEmail} />}
         />
+        <Route path="/detail-airport-transfer/:airportTransferId" element={<DetailAirportTransfer />} />
 
         {/* Phải xác nhận email mới xem được */}
         {!context.profile?.verifiedEmail && (
@@ -51,7 +58,7 @@ function App() {
         {context.isAuthenticated && (
           <>
             <Route path="/booking/:tourId" element={<Booking />} />
-            <Route path="/payment/:bookingCode" element={<Payment />} />
+            <Route path="/payment/:tourId/:bookingCode" element={<Payment />} />
             <Route
               path="/booktour-detail/:tourId/:bookingCode"
               element={<BookingDetail />}
@@ -73,12 +80,20 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/admin/*" element={<NotFound />} />
           <Route path="/admin" element={<Dashboard />} />
+          {/* Tour */}
+          <Route path="/admin/tour-report" element={<TourReport />} />
           <Route path="/admin/tour-management" element={<TourManagement />} />
           <Route path="/admin/tour-update/:tourId" element={<TourUpdate />} />
           <Route path="/admin/tour-booking/:tourId" element={<TourBooking />} />
+          {/* User */}
           <Route path="/admin/user-management" element={<UserManagement />} />
+          {/* Discount */}
           <Route path="/admin/discount-management" element={<DiscountManager />} />
           <Route path="/admin/discount-create" element={<DiscountCreate />} />
+          {/* AirportTransfer */}
+          <Route path="/admin/airport-transfer-management" element={<AirportTransferManager />} />
+          <Route path="/admin/airport-transfer-edit/:airportTransferId" element={<AirportTransferEdit />} />
+          <Route path="/admin/book-ride/:airportTransferId" element={<AirportTransferEdit />} />
         </Route>
       )}
 

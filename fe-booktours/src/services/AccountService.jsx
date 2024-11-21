@@ -169,4 +169,28 @@ export default class AccountService {
       throw error;
     }
   }
+
+  // Tính toán tỷ lệ quay lại của khách hàng
+  static async getRateComeback() {
+    try {
+      const response = await axios.get(`${this.ADMIN_URL}/return-rate`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Liên hệ
+  static async Contact(formData) {
+    try {
+      const response = await axios.post(`${this.BASE_URL}/contact`, formData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

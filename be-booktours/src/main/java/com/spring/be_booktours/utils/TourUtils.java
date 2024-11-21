@@ -71,4 +71,8 @@ public class TourUtils {
         return discountPercent;
     }
 
+    public static String generatePaymentId(String email) {
+        // PM-yyyyMMddHHmmss-<phần tên email> - lấy từ kí tự đầu đến kí tự @
+        return "PM-" + new Date().getTime() + "-" + email.substring(0, email.indexOf('@'));
+    }
 }

@@ -25,7 +25,7 @@ const TourBooking = () => {
         const response = await TourService.getTourById(tourId);
         if (response.status === 200) {
           setTour(response.data);
-          document.title = `Danh sách đặt tour - ${response.data?.name}`;
+          document.title = `Danh sách đặt tour - ${response.data?.tourName}`;
           setBookTours(response.data?.bookTours);
           setDepartureDate(response.data?.departureDates[0]);
         }
@@ -214,12 +214,15 @@ const TourBooking = () => {
                                           bookTour.bookingCode
                                         );
                                       if (response.status === 200) {
-                                        setBookTours([
-                                          ...bookTours,
-                                          (bookTours[index].confirmed = true),
-                                        ]);
+                                        // Xóa bookTour đã xác nhận khỏi danh sách
+                                        const newBookTours = bookTours.filter(
+                                          (item) =>
+                                            item.bookingCode !==
+                                            bookTour.bookingCode
+                                        );
                                       }
                                     }
+                                    // cập nhật lại trạng thái
                                   }}
                                 >
                                   <option value="Đã xác nhận">

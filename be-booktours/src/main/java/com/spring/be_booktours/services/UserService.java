@@ -25,12 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.be_booktours.dtos.MyResponse;
 import com.spring.be_booktours.dtos.account.ChangePasswordRequest;
 import com.spring.be_booktours.dtos.account.ChangeProfileRequest;
+import com.spring.be_booktours.dtos.account.Contact;
 import com.spring.be_booktours.dtos.account.LogRegResponse;
 import com.spring.be_booktours.dtos.account.LoginRequest;
 import com.spring.be_booktours.dtos.account.RegisterRequest;
 import com.spring.be_booktours.entities.AppUser;
 import com.spring.be_booktours.repositories.AppUserRepository;
 import com.spring.be_booktours.utils.JWTUtils;
+
+import jakarta.validation.Valid;
 
 @Service
 @Transactional
@@ -334,6 +337,31 @@ public class UserService {
             response.setMessage("Đã có " + totalCustomers + " khách hàng đăng ký trong " + days + " ngày qua");
             response.setData(totalCustomers);
         }
+        return response;
+    }
+
+    public MyResponse<Double> ReturnRate() {
+        MyResponse<Double> response = new MyResponse<>();
+
+        List<AppUser> users = usersRepo.findAll();
+        // Tính toán số khách hàng đăng ký từ 2 lần trở lên
+        int totalBookingGte2 = users.stream().filter(user -> user.getBookingHistories().size() >= 2).toList().size();
+        // Tính toán số khách hàng chỉ đăng kí 1 lần duy nhất
+        int totalBookingEq1 = users.stream().filter(user -> user.getBookingHistories().size() == 1).toList().size();
+        // Tính toán tỷ lệ quay lại của khách hàng
+        double returnRate = (double) totalBookingGte2 / (totalBookingGte2 + totalBookingEq1) * 100;
+
+        response.setStatus(200);
+        response.setMessage("Tính toán tỷ lệ quay lại của khách hàng thành công!");
+        response.setData(returnRate);
+        return response;
+    }
+
+    public MyResponse<?> Contact(Contact contact) {
+        MyResponse<?> response = new MyResponse<>();
+        emailSenderService.sendContact(contact);
+        response.setStatus(200);
+        response.setMessage("Gửi thông tin liên hệ thành công!");
         return response;
     }
 

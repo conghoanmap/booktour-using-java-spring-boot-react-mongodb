@@ -45,4 +45,11 @@ public class AdminAccountController {
     public ResponseEntity<?> countCustomers(@RequestParam(defaultValue = "7", required = false) int days) {
         return ResponseEntity.ok(userService.CountCustomers(days));
     }
+    
+    // Tính toán tỷ lệ quay lại của khách hàng
+    @GetMapping("/return-rate")
+    public ResponseEntity<?> returnRate() {
+        return ResponseEntity.ok(userService.ReturnRate());
+    }
+
 }

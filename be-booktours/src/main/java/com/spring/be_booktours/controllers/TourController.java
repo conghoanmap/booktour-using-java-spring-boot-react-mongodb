@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.Authentication;
+
 import com.spring.be_booktours.entities.sub_entities.BookTour;
+import com.spring.be_booktours.entities.sub_entities.Payment;
 import com.spring.be_booktours.entities.sub_entities.Review;
 import com.spring.be_booktours.helpers.QueryObject;
 import com.spring.be_booktours.services.TourService;
@@ -94,5 +96,13 @@ public class TourController {
         review.setEmail(email);
         review.setReviewDate(new Date());
         return ResponseEntity.ok(tourService.reviewTour(tourId, review));
+    }
+
+    @PostMapping("/payment/{tourId}/{bookingCode}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<?> paymentTour(@PathVariable String tourId, @PathVariable String bookingCode,@Valid @RequestBody Payment payment) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return ResponseEntity.ok(tourService.paymentTour(email, tourId, bookingCode, payment));
     }
 }

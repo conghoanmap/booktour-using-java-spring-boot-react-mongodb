@@ -18,6 +18,7 @@ export default {
   },
   plugins: [
     // ...
+    require('@tailwindcss/typography'),
     require('@tailwindcss/line-clamp'),
     require('@tailwindcss/forms'),
     require("tw-elements/plugin.cjs")

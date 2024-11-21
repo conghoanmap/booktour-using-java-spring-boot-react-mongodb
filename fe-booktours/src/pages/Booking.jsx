@@ -53,7 +53,7 @@ const Booking = () => {
     tourServices: [],
   });
   const [bookerError, setBookerError] = useState({});
-  console.log(location.state);
+  // console.log(location.state);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -79,13 +79,13 @@ const Booking = () => {
         ...bookTour,
         paymentMethod: paymentMethods[currentPaymentMethod].title,
       });
-      console.log(response);
+      console.log(response.data);
       if (response.status !== 200) {
         alert(response?.message);
         setBookerError({});
       } else {
         if (currentPaymentMethod === 0) {
-          navigate(`/payment/${response.data}`);
+          navigate(`/payment/${tourId}/${response.data}`);
         } else {
           navigate(`/booktour-detail/${tourId}/${response.data}`);
         }
