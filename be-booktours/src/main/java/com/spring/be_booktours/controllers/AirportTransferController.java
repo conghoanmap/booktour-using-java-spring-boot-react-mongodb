@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.be_booktours.entities.sub_entities.BookRide;
+import com.spring.be_booktours.entities.sub_entities.Payment;
 import com.spring.be_booktours.services.AirportTransferService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/airport-transfer")
@@ -48,7 +52,7 @@ public class AirportTransferController {
 
     // Đặt chuyến đưa đón sân bay
     @PostMapping("/book-ride/{airportTransferId}")
-    public ResponseEntity<?> bookRide(@PathVariable String airportTransferId, @RequestBody BookRide bookRide) {
+    public ResponseEntity<?> bookRide(@PathVariable String airportTransferId, @Valid @RequestBody BookRide bookRide) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         bookRide.setBookerEmail(email);
@@ -59,5 +63,14 @@ public class AirportTransferController {
     @GetMapping("/find-book-ride/{airportTransferId}/{bookRideId}")
     public ResponseEntity<?> findBookRide(@PathVariable String airportTransferId, @PathVariable String bookRideId) {
         return ResponseEntity.ok(airportTransferService.findBookRide(airportTransferId, bookRideId));
+    }
+
+    @PostMapping("/payment-bookride/{airportTransferId}/{bookRideId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<?> paymentBookRide(@PathVariable String airportTransferId, @PathVariable String bookRideId,
+            @Valid @RequestBody Payment payment) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return ResponseEntity.ok(airportTransferService.paymentBookRide(email, airportTransferId, bookRideId, payment));
     }
 }

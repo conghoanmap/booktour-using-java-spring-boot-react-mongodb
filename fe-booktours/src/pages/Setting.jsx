@@ -13,6 +13,8 @@ import ChangePassword from "./ChangePassword";
 import History from "../components/History";
 import UserInfomation from "../components/UserInfomation";
 import ChangeInfomation from "../components/ChangeInfomation";
+import { FiHardDrive } from "react-icons/fi";
+import HistoryBookRide from "../components/HistoryBookRide";
 
 const navigations = [
   {
@@ -28,6 +30,12 @@ const navigations = [
     href: "#",
     icon: BellIcon,
     component: History,
+  },
+  {
+    name: "Lịch sử đặt xe",
+    href: "#",
+    icon: FiHardDrive,
+    component: HistoryBookRide,
   },
   {
     name: "Vé máy bay",

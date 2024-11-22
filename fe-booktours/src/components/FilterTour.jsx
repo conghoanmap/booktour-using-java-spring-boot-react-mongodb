@@ -36,7 +36,7 @@ export const MobileFilter = (props) => {
     <Transition show={props.mobileFiltersOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 flex  lg:hidden"
+        className="fixed inset-0 flex lg:hidden"
         onClose={props.setMobileFiltersOpen}
       >
         <TransitionChild

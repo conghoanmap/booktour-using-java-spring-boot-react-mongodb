@@ -60,7 +60,7 @@ const AirportTransferManager = () => {
 
   return (
     <main className="flex-1">
-      <div className="py-6">
+      <div className="py-6 h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <h1 className="text-2xl font-semibold text-gray-900">
             Thông tin đặt tour
@@ -164,6 +164,12 @@ const AirportTransferManager = () => {
                             <th
                               scope="col"
                               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                              Trạng thái
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             ></th>
                           </tr>
                         </thead>
@@ -197,6 +203,11 @@ const AirportTransferManager = () => {
                                 )}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {airportTransfer.active
+                                  ? "Đang hoạt động"
+                                  : "Ngưng hoạt động"}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 <Link
                                   to={`/admin/airport-transfer-edit/${airportTransfer.airportTransferId}`}
                                   className="text-sky-500 hover:text-sky-700"
@@ -204,7 +215,7 @@ const AirportTransferManager = () => {
                                   <PencilAltIcon className="h-6 w-6" />
                                 </Link>
                                 <Link
-                                  to={`/admin/airport-transfer-edit/${airportTransfer.airportTransferId}`}
+                                  to={`/admin/book-ride/${airportTransfer.airportTransferId}`}
                                   className="text-teal-500 hover:text-teal-700"
                                 >
                                   <EyeIcon className="h-6 w-6" />

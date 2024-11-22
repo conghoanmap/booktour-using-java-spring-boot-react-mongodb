@@ -33,7 +33,7 @@ export const VehicleData = [
     vehicleId: "xe-7-cho",
     vehicleName: "Xe 7 chỗ",
     vehicleImage:
-      "https://static.transferz.com/vehicle-types/economy-sedan.jpg",
+      "https://static.transferz.com/vehicle-types/minivan.jpg",
     vehicleType: "Xe 4 bánh",
     maxPeople: 7,
     maxLuggage: 5,
@@ -43,7 +43,7 @@ export const VehicleData = [
     vehicleId: "xe-10-cho",
     vehicleName: "Xe 10 chỗ",
     vehicleImage:
-      "https://static.transferz.com/vehicle-types/economy-sedan.jpg",
+      "https://static.transferz.com/vehicle-types/minibus.jpg",
     vehicleType: "Xe 4 bánh",
     maxPeople: 10,
     maxLuggage: 5,

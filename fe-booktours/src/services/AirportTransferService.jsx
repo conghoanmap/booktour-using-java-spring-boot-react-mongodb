@@ -17,7 +17,9 @@ export default class AirportTransferService {
   // Get airport transfer by id
   static async getAirportTransferById(airportTransfer, isActive, countVehicle) {
     try {
-      const response = await axios.get(`${this.BASE_URL}/${airportTransfer}?isActive=${isActive}&countVehicle=${countVehicle}`);
+      const response = await axios.get(
+        `${this.BASE_URL}/${airportTransfer}?isActive=${isActive}&countVehicle=${countVehicle}`
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -27,7 +29,9 @@ export default class AirportTransferService {
   // Get airport transfer by airport
   static async getAirportTransferByAirport(airportId, isActive, countVehicle) {
     try {
-      const response = await axios.get(`${this.BASE_URL}/find-by-airport/${airportId}?isActive=${isActive}&countVehicle=${countVehicle}`);
+      const response = await axios.get(
+        `${this.BASE_URL}/find-by-airport/${airportId}?isActive=${isActive}&countVehicle=${countVehicle}`
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -35,7 +39,7 @@ export default class AirportTransferService {
   }
 
   // book ride
-  static async getBookRides(airportTransferId, bookRide) {
+  static async bookRide(airportTransferId, bookRide) {
     try {
       const response = await axios.post(
         `${this.BASE_URL}/book-ride/${airportTransferId}`,
@@ -52,8 +56,8 @@ export default class AirportTransferService {
     }
   }
 
-  //tra cứu thông tin chuyến đi
-  static async bookRide(airportTransferId, bookRideId) {
+  // get book ride by id
+  static async getBookRideById(airportTransferId, bookRideId) {
     try {
       const response = await axios.get(
         `${this.BASE_URL}/find-book-ride/${airportTransferId}/${bookRideId}`,
@@ -109,6 +113,24 @@ export default class AirportTransferService {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // thanh toán
+  static async payment(airportTransferId, bookRideId, payment) {
+    try {
+      const response = await axios.post(
+        `${this.BASE_URL}/payment-bookride/${airportTransferId}/${bookRideId}`,
+        payment,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       throw error;

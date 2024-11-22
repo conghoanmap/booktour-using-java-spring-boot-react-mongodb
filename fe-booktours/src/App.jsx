@@ -30,6 +30,9 @@ import Faq from "./pages/Faq";
 import AirportTransferManager from "./pages/admin/AirportTransferManager";
 import AirportTransferEdit from "./pages/admin/AirportTransferEdit";
 import DetailAirportTransfer from "./pages/DetailAirportTransfer";
+import BookRideManager from "./pages/admin/BookRideManager";
+import PaymentBookRide from "./pages/PaymentBookRide";
+import DetailBookRide from "./pages/DetailBookRide";
 
 function App() {
   const context = useContext(GlobalContext);
@@ -46,9 +49,18 @@ function App() {
         <Route path="/tours" element={<Tours />} />
         <Route
           path="/tour-detail/:tourId"
-          element={<TourDetail roles={context?.roles} isAuthenticated={context.isAuthenticated} verifiedEmail={context.profile?.verifiedEmail} />}
+          element={
+            <TourDetail
+              roles={context?.roles}
+              isAuthenticated={context.isAuthenticated}
+              verifiedEmail={context.profile?.verifiedEmail}
+            />
+          }
         />
-        <Route path="/detail-airport-transfer/:airportTransferId" element={<DetailAirportTransfer />} />
+        <Route
+          path="/detail-airport-transfer/:airportTransferId"
+          element={<DetailAirportTransfer />}
+        />
 
         {/* Phải xác nhận email mới xem được */}
         {!context.profile?.verifiedEmail && (
@@ -63,13 +75,22 @@ function App() {
               path="/booktour-detail/:tourId/:bookingCode"
               element={<BookingDetail />}
             />
+
+            <Route
+              path="/payment-bookride/:airportTransferId/:bookRideId"
+              element={<PaymentBookRide />}
+            />
+            <Route
+              path="/bookride-detail/:airportTransferId/:bookRideId"
+              element={<DetailBookRide />}
+            />
           </>
         )}
 
         {/* Chưa đăng nhập */}
         {!context.isAuthenticated && (
           <>
-            <Route path="/login" element={<Login/>} />
+            <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </>
         )}
@@ -88,12 +109,24 @@ function App() {
           {/* User */}
           <Route path="/admin/user-management" element={<UserManagement />} />
           {/* Discount */}
-          <Route path="/admin/discount-management" element={<DiscountManager />} />
+          <Route
+            path="/admin/discount-management"
+            element={<DiscountManager />}
+          />
           <Route path="/admin/discount-create" element={<DiscountCreate />} />
           {/* AirportTransfer */}
-          <Route path="/admin/airport-transfer-management" element={<AirportTransferManager />} />
-          <Route path="/admin/airport-transfer-edit/:airportTransferId" element={<AirportTransferEdit />} />
-          <Route path="/admin/book-ride/:airportTransferId" element={<AirportTransferEdit />} />
+          <Route
+            path="/admin/airport-transfer-management"
+            element={<AirportTransferManager />}
+          />
+          <Route
+            path="/admin/airport-transfer-edit/:airportTransferId"
+            element={<AirportTransferEdit />}
+          />
+          <Route
+            path="/admin/book-ride/:airportTransferId"
+            element={<BookRideManager />}
+          />
         </Route>
       )}
 

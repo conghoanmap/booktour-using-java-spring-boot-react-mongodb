@@ -1,30 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  Switch,
-  SwitchDescription,
-  SwitchGroup,
-  SwitchLabel,
-} from "@headlessui/react";
+import React, { useContext } from "react";
 import { GlobalContext } from "../contexts/GlobalProvider";
-import formatDateYYYYMMDD from "../utils/format-date-yyyymmdd";
 import { Link } from "react-router-dom";
-import TourService from "../services/TourService";
+import formatDateYYYYMMDD from "../utils/format-date-yyyymmdd";
 
-const History = () => {
+const HistoryBookRide = () => {
   const context = useContext(GlobalContext);
-
-  useEffect(() => {
-    document.title = "Lịch sử đặt tour";
-  }, []);
-
-  const handleCancelTour = async (tourId, bookingCode) => {
-    try {
-      const response = await TourService.cancelBookTour(tourId, bookingCode);
-      alert(response.message);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <div className="divide-y divide-gray-200 lg:col-span-9">
@@ -47,13 +27,13 @@ const History = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Mã đặt tour
+                      Mã dịch vụ
                     </th>
                     <th
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Mã tour
+                      Mã đặt
                     </th>
                     <th
                       scope="col"
@@ -65,42 +45,37 @@ const History = () => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
-                      Action
+                      Xem chi tiết
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {context.profile?.bookingHistories?.map((booking, index) => (
+                  {context.profile?.bookRideHistories?.map((booking, index) => (
                     <tr
                       key={index}
                       className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                     >
                       <td className="w-5 truncate px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                         <Link
-                          to={`/booktour-detail/${booking.tourId}/${booking.bookingCode}`}
+                          to={`/booktour-detail/${booking.airportTransferId}/${booking.bookRideId}`}
                           className="hover:text-sky-500"
                         >
-                          {booking.bookingCode}
+                          {booking.bookRideId}
                         </Link>
                       </td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-                        {booking.tourId}
+                        {booking.airportTransferId}
                       </td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                         {formatDateYYYYMMDD(booking.bookingDate)}
                       </td>
-                      <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
-                        <p
-                          className="cursor-pointer text-sky-600 hover:text-sky-900"
-                          onClick={() =>
-                            handleCancelTour(
-                              booking.tourId,
-                              booking.bookingCode
-                            )
-                          }
+                      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+                        <Link
+                          to={`/bookride-detail/${booking.airportTransferId}/${booking.bookRideId}`}
+                          className="hover:text-sky-500"
                         >
-                          Hủy tour
-                        </p>
+                          Xem chi tiết
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -114,4 +89,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default HistoryBookRide;

@@ -196,7 +196,7 @@ const TourReport = () => {
 
   return (
     <main className="flex-1">
-      <div className="py-6">
+      <div className="py-6 h-screen">
         <div className="max-w-7xl mx-auto sm:px-6 md:px-8">
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <div className="rounded-xl overflow-hidden bg-white">

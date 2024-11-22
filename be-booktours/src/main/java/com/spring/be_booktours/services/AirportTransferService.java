@@ -21,10 +21,14 @@ import com.spring.be_booktours.entities.AppUser;
 import com.spring.be_booktours.entities.sub_entities.Airfield;
 import com.spring.be_booktours.entities.sub_entities.BookRide;
 import com.spring.be_booktours.entities.sub_entities.BookRideHistory;
+import com.spring.be_booktours.entities.sub_entities.Payment;
 import com.spring.be_booktours.entities.sub_entities.Vehicle;
 import com.spring.be_booktours.repositories.AirportTransferRepository;
 import com.spring.be_booktours.repositories.AppUserRepository;
 import com.spring.be_booktours.utils.AirportTransferUtils;
+import com.spring.be_booktours.utils.TourUtils;
+
+import jakarta.validation.Valid;
 
 @Service
 @Transactional
@@ -256,6 +260,37 @@ public class AirportTransferService {
         response.setStatus(200);
         response.setMessage("Lấy thông tin dịch vụ đưa đón sân bay thành công");
         response.setData(airportTransfer);
+        return response;
+    }
+
+    public MyResponse<?> paymentBookRide(String email, String airportTransferId, String bookRideId, Payment payment) {
+        MyResponse<?> response = new MyResponse<>();
+
+        // Kiểm tra airport transfer tồn tại
+        AirportTransfer airportTransfer = airportTransferRepository.findById(airportTransferId).orElse(null);
+        if (airportTransfer == null) {
+            response.setStatus(400);
+            response.setMessage("Dịch vụ đưa đón sân bay không tồn tại trong hệ thống");
+            return response;
+        }
+
+        // Kiểm tra book ride tồn tại
+        BookRide bookRide = airportTransfer.getBookRides().stream().filter(b -> b.getBookRideId().equals(bookRideId))
+                .findFirst().orElse(null);
+        if (bookRide == null) {
+            response.setStatus(400);
+            response.setMessage("Lượt đặt chuyến đưa đón sân bay không tồn tại trong hệ thống");
+            return response;
+        }
+
+        payment.setPaymentId(TourUtils.generatePaymentId(email));
+        payment.setPaymentDate(new Date());
+
+        bookRide.setPayment(payment);
+        airportTransferRepository.save(airportTransfer);
+
+        response.setStatus(200);
+        response.setMessage("Thanh toán chuyến đưa đón sân bay thành công");
         return response;
     }
 }
