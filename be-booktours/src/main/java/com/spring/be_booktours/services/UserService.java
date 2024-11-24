@@ -33,8 +33,6 @@ import com.spring.be_booktours.entities.AppUser;
 import com.spring.be_booktours.repositories.AppUserRepository;
 import com.spring.be_booktours.utils.JWTUtils;
 
-import jakarta.validation.Valid;
-
 @Service
 @Transactional
 public class UserService {

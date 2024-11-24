@@ -28,8 +28,6 @@ import com.spring.be_booktours.repositories.AppUserRepository;
 import com.spring.be_booktours.utils.AirportTransferUtils;
 import com.spring.be_booktours.utils.TourUtils;
 
-import jakarta.validation.Valid;
-
 @Service
 @Transactional
 public class AirportTransferService {

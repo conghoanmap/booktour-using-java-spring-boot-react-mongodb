@@ -59,9 +59,6 @@ const navigation = [
 
 const userNavigation = [
   { name: "Thông tin tài khoản", href: "/setting?nav=0" },
-  { name: "Trang cá nhân", href: "/setting?nav=1" },
-  { name: "Lịch sử đặt vé", href: "/setting?nav=3" },
-  { name: "Đổi mật khẩu", href: "/setting?nav=2" },
 ];
 const attachments = [
   { name: "resume_front_end_developer.pdf", href: "#" },
