@@ -27,5 +27,5 @@ public class Ticket {
     private ContactInfo contactInfo; // Thông tin liên hệ
     private Payment payment; // Thông tin thanh toán
     private boolean confirmed; // true: đã xác nhận, false: chưa xác nhận (q)
-    private boolean canceled; // true: đã hủy, false: chưa hủy (q)
+    private boolean canceled; // true: đã hủy, false: chưa hủy
 }

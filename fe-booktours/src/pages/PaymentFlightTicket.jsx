@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import VnPayService from "../services/VnPaySerivce";
-import AirportTransferService from "../services/AirportTransferService";
+import FlightService from "../services/FlightService";
 import formatPrice from "../utils/format-price";
+import VnPayService from "../services/VnPaySerivce";
 
-const PaymentBookRide = () => {
+const PaymentFlightTicket = () => {
   const navigate = useNavigate();
-  const { airportTransferId, bookRideId } = useParams();
+  const { flightCode, ticketId } = useParams();
   const [qrCode, setQrCode] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
   const [confirmation, setConfirmation] = useState({
@@ -15,8 +15,7 @@ const PaymentBookRide = () => {
   });
 
   useEffect(() => {
-    document.title = "Thanh toán đơn đặt xe";
-
+    document.title = "Thanh toán vé máy bay";
     const createQRCode = async (totalPrice) => {
       try {
         const response = await VnPayService.createQRCode({
@@ -37,54 +36,46 @@ const PaymentBookRide = () => {
       }
     };
 
-    const fetchBookRide = async () => {
+    const fetchTicket = async () => {
       try {
-        const response = await AirportTransferService.getBookRideById(
-          airportTransferId,
-          bookRideId
+        const response = await FlightService.getTicket(
+          flightCode,
+          ticketId
         );
         console.log(response.data);
         if (response.status === 200) {
-          const totalCost = response.data?.totalCost;
-          setTotalPrice(totalCost);
-          createQRCode(totalCost);
+          const totalPrice = response.data?.totalPrice;
+          setTotalPrice(totalPrice);
+          createQRCode(totalPrice);
         }
       } catch (error) {
-        console.error("Failed to fetch booking: ", error);
+        console.error("Failed to fetch ticket: ", error);
       }
     };
-    fetchBookRide();
+
+    fetchTicket();
   }, []);
 
   const handlePayment = async () => {
     try {
-      const response = await AirportTransferService.payment(
-        airportTransferId,
-        bookRideId,
-        {
-          paymentMethod: "Thanh toán trực tuyến",
-          paymentStatus: "Đã thanh toán",
-          confirmationPaymentCode: confirmation.code, // Mã xác nhận thanh toán
-          paymentAmount: totalPrice, // Số tiền thanh toán
-          paymentNote: `Thanh toán QR cho đơn đặt tour ${bookRideId}, số tiền ${formatPrice(
-            totalPrice
-          )}`, // Ghi chú
-        }
-      );
+      const response = await FlightService.payTicket(flightCode, ticketId, {
+        paymentMethod: "Thanh toán trực tuyến",
+        paymentStatus: "Đã thanh toán",
+        confirmationPaymentCode: confirmation.code, // Mã xác nhận thanh toán
+        paymentAmount: totalPrice, // Số tiền thanh toán
+        paymentNote: `Thanh toán QR cho đơn đặt tour ${flightCode}, số tiền ${formatPrice(
+          totalPrice
+        )}`, // Ghi chú
+      });
       // console.log(response);
       if (response.status === 200) {
-        alert("Thanh toán thành công, bạn sẽ được chuyển hướng về trang xem chi tiết đơn đặt xe");
-        // navigate(`/`);
-        navigate(`/bookride-detail/${airportTransferId}/${bookRideId}`);
+        alert("Thanh toán thành công, bạn sẽ được chuyển hướng về trang chi tiết vé máy bay");
+        navigate(`/ticket-flight-detail/${flightCode}/${ticketId}`);
+      } else {
+        alert(response.message);
       }
     } catch (error) {
-      console.error("Failed to confirm payment: ", error);
-      setConfirmation({
-        ...confirmation,
-        error:
-          error.response?.data?.confirmationPaymentCode ||
-          "Xác nhận thanh toán thất bại",
-      });
+      console.error("Failed to pay: ", error);
     }
   };
   return (
@@ -155,4 +146,4 @@ const PaymentBookRide = () => {
   );
 };
 
-export default PaymentBookRide;
+export default PaymentFlightTicket;

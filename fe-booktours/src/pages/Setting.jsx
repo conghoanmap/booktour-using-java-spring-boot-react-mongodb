@@ -15,6 +15,7 @@ import UserInfomation from "../components/UserInfomation";
 import ChangeInfomation from "../components/ChangeInfomation";
 import { FiHardDrive } from "react-icons/fi";
 import HistoryBookRide from "../components/HistoryBookRide";
+import HistoryTicketFlight from "../components/HistoryTicketFlight";
 
 const navigations = [
   {
@@ -41,7 +42,7 @@ const navigations = [
     name: "Vé máy bay",
     href: "#",
     icon: CreditCardIcon,
-    component: ChangePassword,
+    component: HistoryTicketFlight,
   },
   {
     name: "Khách sạn",

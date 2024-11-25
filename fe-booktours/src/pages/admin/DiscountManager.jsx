@@ -32,28 +32,9 @@ const DiscountManager = () => {
     }
   };
 
-  const handleBackup = async () => {
-    try {
-      const response = await DataService.backupCollection("appusers");
-      alert(response.message);
-    } catch (error) {
-      // console.error(error);
-      alert("Sao lưu dữ liệu không thành công, vui lòng thử lại sau");
-    }
-  };
-
-  const handleRestore = async () => {
-    try {
-      const response = await DataService.restoreCollection("appusers");
-      alert(response.message);
-    } catch (error) {
-      // console.error(error);
-      alert("Phục hồi dữ liệu không thành công, vui lòng thử lại sau");
-    }
-  };
   return (
     <main className="flex-1">
-      <div className="py-6 h-screen"> h-screen">
+      <div className="py-6 h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
           <h1 className="text-2xl font-semibold text-gray-900">
             Quản lý giảm giá
@@ -79,28 +60,6 @@ const DiscountManager = () => {
                     />
                     Thêm giảm giá
                   </Link>
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                    onClick={handleBackup}
-                  >
-                    <DatabaseIcon
-                      className="-ml-1 mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    Sao lưu
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
-                    onClick={handleRestore}
-                  >
-                    <DatabaseIcon
-                      className="-ml-1 mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    Phục hồi
-                  </button>
                 </div>
               </div>
               <div className="mt-5 flex flex-col">

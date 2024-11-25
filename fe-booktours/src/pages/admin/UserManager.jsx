@@ -47,7 +47,7 @@ const UserManagement = () => {
         if (response.status === 200) {
           setUsers(response.data);
           console.log(response.data?.length);
-          
+
           setRoles(response.data[0].roles);
         }
       } catch (error) {
@@ -75,26 +75,6 @@ const UserManagement = () => {
       }
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const handleBackup = async () => {
-    try {
-      const response = await DataService.backupCollection("appusers");
-      alert(response.message);
-    } catch (error) {
-      // console.error(error);
-      alert("Sao lưu dữ liệu không thành công, vui lòng thử lại sau");
-    }
-  };
-
-  const handleRestore = async () => {
-    try {
-      const response = await DataService.restoreCollection("appusers");
-      alert(response.message);
-    } catch (error) {
-      // console.error(error);
-      alert("Phục hồi dữ liệu không thành công, vui lòng thử lại sau");
     }
   };
 
@@ -226,59 +206,6 @@ const UserManagement = () => {
             <div className="py-4">
               {/* border-2 border-dashed border-gray-200 */}
               <div className="rounded-lg">
-                <div className="mt-5 gap-5 md:flex">
-                  <div className="md:mb-0 mb-3 flex gap-3">
-                    <button
-                      type="button"
-                      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                      onClick={handleBackup}
-                    >
-                      <DatabaseIcon
-                        className="-ml-1 mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      Sao lưu
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
-                      onClick={handleRestore}
-                    >
-                      <DatabaseIcon
-                        className="-ml-1 mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      Phục hồi
-                    </button>
-                  </div>
-                </div>
-                {/* <div className="mt-5 gap-5 md:flex">
-                <div className="ml-auto grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <select
-                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky500 focus:border-ssky00 sm:text-sm rounded-md"
-                      value={departureDate}
-                      onChange={(e) => setDepartureDate(e.target.value)}
-                    >
-                      {tour.departureDates?.map((date, index) => (
-                        <option key={index} value={date}>
-                          {formatDateYYYYMMDD(date)}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <select
-                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-sky500 focus:border-ssky00 sm:text-sm rounded-md"
-                      value={tourStatus}
-                      onChange={(e) => setTourStatus(e.target.value)}
-                    >
-                      <option value="Đã xác nhận">Đã xác nhận</option>
-                      <option value="Chưa xác nhận">Chưa xác nhận</option>
-                    </select>
-                  </div>
-                </div>
-              </div> */}
                 <div className="mt-5 flex flex-col">
                   <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -382,26 +309,26 @@ const UserManagement = () => {
                     </div>
                   </div>
                 </div>
-                  <Pagination
-                    page={pageLimit.page}
-                    limit={pageLimit.limit}
-                    onNext={() => {
-                      if (users?.length === 10) {
-                        setPageLimit({
-                          ...pageLimit,
-                          page: pageLimit.page + 1,
-                        });
-                      }
-                    }}
-                    onPrevious={() => {
-                      if (pageLimit.page > 1) {
-                        setPageLimit({
-                          ...pageLimit,
-                          page: pageLimit.page - 1,
-                        });
-                      }
-                    }}
-                  />
+                <Pagination
+                  page={pageLimit.page}
+                  limit={pageLimit.limit}
+                  onNext={() => {
+                    if (users?.length === 10) {
+                      setPageLimit({
+                        ...pageLimit,
+                        page: pageLimit.page + 1,
+                      });
+                    }
+                  }}
+                  onPrevious={() => {
+                    if (pageLimit.page > 1) {
+                      setPageLimit({
+                        ...pageLimit,
+                        page: pageLimit.page - 1,
+                      });
+                    }
+                  }}
+                />
               </div>
             </div>
             {/* /End replace */}

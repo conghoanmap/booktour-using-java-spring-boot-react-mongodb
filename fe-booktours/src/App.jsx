@@ -33,6 +33,13 @@ import DetailAirportTransfer from "./pages/DetailAirportTransfer";
 import BookRideManager from "./pages/admin/BookRideManager";
 import PaymentBookRide from "./pages/PaymentBookRide";
 import DetailBookRide from "./pages/DetailBookRide";
+import Flights from "./pages/Flights";
+import DetailTicketFlight from "./pages/DetailTicketFlight";
+import PaymentFlightTicket from "./pages/PaymentFlightTicket";
+import FlightManager from "./pages/admin/FlightManager";
+import FlightUpdate from "./pages/admin/FlightUpdate";
+import FlightBookingManager from "./pages/FlightBookingManager";
+import FlightReport from "./pages/admin/FlightReport";
 
 function App() {
   const context = useContext(GlobalContext);
@@ -61,6 +68,7 @@ function App() {
           path="/detail-airport-transfer/:airportTransferId"
           element={<DetailAirportTransfer />}
         />
+        <Route path="/flights" element={<Flights />} />
 
         {/* Phải xác nhận email mới xem được */}
         {!context.profile?.verifiedEmail && (
@@ -83,6 +91,14 @@ function App() {
             <Route
               path="/bookride-detail/:airportTransferId/:bookRideId"
               element={<DetailBookRide />}
+            />
+            <Route
+              path="/payment-ticket-flight/:flightCode/:ticketId"
+              element={<PaymentFlightTicket />}
+            />
+            <Route
+              path="/ticket-flight-detail/:flightCode/:ticketId"
+              element={<DetailTicketFlight />}
             />
           </>
         )}
@@ -126,6 +142,23 @@ function App() {
           <Route
             path="/admin/book-ride/:airportTransferId"
             element={<BookRideManager />}
+          />
+          {/* Chuyến bay */}
+          <Route
+            path="/admin/flight-management"
+            element={<FlightManager />}
+          />
+          <Route
+            path="/admin/flight-update/:flightCode"
+            element={<FlightUpdate />}
+          />
+          <Route
+            path="/admin/flight-booking-management/:flightCode"
+            element={<FlightBookingManager />}
+          />
+          <Route
+            path="/admin/flight-report"
+            element={<FlightReport />}
           />
         </Route>
       )}

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -33,10 +34,12 @@ import com.spring.be_booktours.entities.Flight;
 import com.spring.be_booktours.entities.flight_entities.FlightBooking;
 import com.spring.be_booktours.entities.flight_entities.Schedule;
 import com.spring.be_booktours.entities.flight_entities.Ticket;
+import com.spring.be_booktours.entities.sub_entities.Payment;
 import com.spring.be_booktours.helpers.FlightQuery;
 import com.spring.be_booktours.repositories.AppUserRepository;
 import com.spring.be_booktours.repositories.FlightRepository;
 import com.spring.be_booktours.utils.FlightUtils;
+import com.spring.be_booktours.utils.TourUtils;
 
 @Service
 public class FlightService {
@@ -53,9 +56,12 @@ public class FlightService {
         List<Flight> flights = new ArrayList<>();
         Query query = new Query();
 
-        if (flightQuery.getDeparture().length() > 0 && flightQuery.getDestination().length() > 0) {
+        if (flightQuery.getDeparture().length() > 0) {
             // Lọc theo sân bay đi
             query.addCriteria(Criteria.where("departure.airfieldId").is(flightQuery.getDeparture()));
+        }
+
+        if (flightQuery.getDestination().length() > 0) {
             // Lọc theo sân bay đến
             query.addCriteria(Criteria.where("destination.airfieldId").is(flightQuery.getDestination()));
         }
@@ -64,8 +70,9 @@ public class FlightService {
         if (flightQuery.getAirline().length() > 0) {
             query.addCriteria(Criteria.where("airline.airlineId").is(flightQuery.getAirline()));
         }
-        // Lọc theo ngày khởi hành
-        if (flightQuery.getDepartureDate().isAfter(LocalDate.now())) {
+        // Lọc theo ngày khởi hành nếu ngày khởi hành lớn hơn hoặc là ngày hôm nay
+        if (flightQuery.getDepartureDate().isEqual(LocalDate.now())
+                || flightQuery.getDepartureDate().isAfter(LocalDate.now())) {
             query.addCriteria(Criteria.where("schedules.departureDate").is(flightQuery.getDepartureDate()));
         } else {
             query.addCriteria(Criteria.where("schedules.departureDate").gte(flightQuery.getDepartureDate()));
@@ -322,8 +329,12 @@ public class FlightService {
             response.setMessage("Không thể xem vé của người khác");
             return response;
         }
+        // Tìm thông tin lịch bay
+        Schedule schedule = flight.getSchedules().stream().filter(s -> s.getScheduleId().equals(ticket.getScheduleId()))
+                .findFirst().get();
         DetailTicket detailTicket = new DetailTicket();
         detailTicket.setTicket(ticket);
+        detailTicket.setSchedule(schedule);
         detailTicket.setFlightName(flight.getFlightName());
         detailTicket.setAirlineName(flight.getAirline().getAirlineName());
         detailTicket.setDepartureAirfield(flight.getDeparture().getAirfieldName());
@@ -381,8 +392,8 @@ public class FlightService {
         return response;
     }
 
-    public MyResponse<?> addSchedule(String flightCode, Schedule schedule) {
-        MyResponse<?> response = new MyResponse<>();
+    public MyResponse<Schedule> addSchedule(String flightCode, Schedule schedule) {
+        MyResponse<Schedule> response = new MyResponse<>();
         Optional<Flight> flightOptional = flightRepository.findByFlightCode(flightCode);
         if (!flightOptional.isPresent()) {
             response.setStatus(404);
@@ -399,6 +410,22 @@ public class FlightService {
             response.setMessage("Lịch bay đã tồn tại");
             return response;
         }
+
+        // Kiểm tra ngày giờ xuất phát
+        if (schedule.getDepartureDate().isBefore(LocalDate.now())) {
+            response.setStatus(400);
+            response.setMessage("Ngày xuất phát phải lớn hơn hoặc bằng ngày hiện tại");
+            return response;
+        }
+        // Nếu ngày xuất phát và ngày hiện tại bằng nhau thì kiểm tra giờ xuất phát
+        if (schedule.getDepartureDate().isEqual(LocalDate.now())) {
+            if (schedule.getDepartureTime().isBefore(LocalTime.now())) {
+                response.setStatus(400);
+                response.setMessage("Giờ xuất phát phải lớn hơn giờ hiện tại");
+                return response;
+            }
+        }
+
         schedule.setScheduleId(FlightUtils.generateScheduleId());
         schedule.setAvailableNormalSeats(40);
         schedule.setAvailableVipSeats(10);
@@ -406,6 +433,7 @@ public class FlightService {
         flightRepository.save(flight);
         response.setStatus(200);
         response.setMessage("Thêm lịch bay thành công, mã lịch bay của bạn là: " + schedule.getScheduleId());
+        response.setData(schedule);
         return response;
     }
 
@@ -425,6 +453,7 @@ public class FlightService {
         oldFlight.setFlightServices(flight.getFlightServices());
         oldFlight.setActive(flight.isActive());
         oldFlight.setCancelable(flight.isCancelable());
+        oldFlight.setTickets(flight.getTickets()); // Xác nhận vé
         flightRepository.save(oldFlight);
         response.setStatus(200);
         response.setMessage("Sửa chuyến bay thành công");
@@ -469,16 +498,16 @@ public class FlightService {
         // db.flights.aggregate([
         // // Đếm số lượng vé được đặt cho từng chuyến bay
         // {
-        // $project: {
+        // : {
         // flightCode: 1, // Mã chuyến bay
         // flightName: 1, // Tên chuyến bay
-        // ticketCount: { $size: "$tickets" } // Số lượng vé
+        // ticketCount: { : "" } // Số lượng vé
         // }
         // },
         // // Sắp xếp giảm dần theo số lượng vé
-        // { $sort: { ticketCount: -1 } },
+        // { : { ticketCount: -1 } },
         // // Lấy ra top 5 chuyến bay
-        // { $limit: 5 }
+        // { : 5 }
         // ]);
 
         Aggregation aggregation = Aggregation.newAggregation(
@@ -499,67 +528,187 @@ public class FlightService {
     public MyResponse<CancellationRate> cancellationRate() {
         MyResponse<CancellationRate> response = new MyResponse<>();
         try {
-        // Bước 1: Unwind để tách mảng "tickets"
-        AggregationOperation unwindTickets = Aggregation.unwind("tickets");
+            // Bước 1: Unwind để tách mảng "tickets"
+            AggregationOperation unwindTickets = Aggregation.unwind("tickets");
 
-        // Bước 2: Group để đếm tổng vé và vé bị hủy
-        AggregationOperation groupByAll = Aggregation.group()
-                .count().as("totalTickets") // Tổng số vé
-                .sum(ConditionalOperators.when(Criteria.where("tickets.canceled").is(true)).then(1).otherwise(0))
-                .as("canceledTickets"); // Số vé bị hủy
+            // Bước 2: Group để đếm tổng vé và vé bị hủy
+            AggregationOperation groupByAll = Aggregation.group()
+                    .count().as("totalTickets") // Tổng số vé
+                    .sum(ConditionalOperators.when(Criteria.where("tickets.canceled").is(true)).then(1).otherwise(0))
+                    .as("canceledTickets"); // Số vé bị hủy
 
-        // Bước 3: Project để tính tỷ lệ hủy
-        AggregationOperation projectCancelRate = Aggregation.project("totalTickets", "canceledTickets")
-                .andExpression("canceledTickets / totalTickets * 100").as("cancelRate"); // Tính tỷ lệ hủy (%)
+            // Bước 3: Project để tính tỷ lệ hủy
+            AggregationOperation projectCancelRate = Aggregation.project("totalTickets", "canceledTickets")
+                    .andExpression("canceledTickets / totalTickets * 100").as("cancelRate"); // Tính tỷ lệ hủy (%)
 
-        // Bước 4: Tạo aggregation pipeline
-        Aggregation aggregation = Aggregation.newAggregation(unwindTickets, groupByAll, projectCancelRate);
+            // Bước 4: Tạo aggregation pipeline
+            Aggregation aggregation = Aggregation.newAggregation(unwindTickets, groupByAll, projectCancelRate);
 
-        // Bước 5: Thực thi aggregation
-        AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, "flights", Map.class);
+            // Bước 5: Thực thi aggregation
+            AggregationResults<Map> results = mongoTemplate.aggregate(aggregation, "flights", Map.class);
 
-        // Lấy kết quả duy nhất
-        Map<String, Object> result = results.getUniqueMappedResult();
+            // Lấy kết quả duy nhất
+            Map<String, Object> result = results.getUniqueMappedResult();
 
-        if (result != null) {
-            // Chuyển đổi kết quả thành đối tượng CancellationRate
-            CancellationRate cancellationRate = new CancellationRate();
-            cancellationRate.setTotalTickets((Integer) result.get("totalTickets"));
-            cancellationRate.setCancelledTickets((Integer) result.get("canceledTickets"));
-            cancellationRate.setCancelRate((Double) result.get("cancelRate"));
+            if (result != null) {
+                // Chuyển đổi kết quả thành đối tượng CancellationRate
+                CancellationRate cancellationRate = new CancellationRate();
+                cancellationRate.setTotalTickets((Integer) result.get("totalTickets"));
+                cancellationRate.setCancelledTickets((Integer) result.get("canceledTickets"));
+                cancellationRate.setCancelRate((Double) result.get("cancelRate"));
 
-            // Gắn dữ liệu vào response
-            response.setStatus(200);
-            response.setMessage("Thống kê tỷ lệ vé bị hủy thành công");
-            response.setData(cancellationRate);
-        } else {
-            response.setStatus(404);
-            response.setMessage("Không có dữ liệu vé để thống kê");
+                // Gắn dữ liệu vào response
+                response.setStatus(200);
+                response.setMessage("Thống kê tỷ lệ vé bị hủy thành công");
+                response.setData(cancellationRate);
+            } else {
+                response.setStatus(404);
+                response.setMessage("Không có dữ liệu vé để thống kê");
+            }
+
+        } catch (Exception e) {
+            response.setStatus(500);
+            response.setMessage("Đã xảy ra lỗi: " + e.getMessage());
         }
 
-    } catch (Exception e) {
-        response.setStatus(500);
-        response.setMessage("Đã xảy ra lỗi: " + e.getMessage());
-    }
-
-    return response;
+        return response;
     }
 
     public MyResponse<List<AirportsToBeReached>> top5MostVisitedAirports() {
         MyResponse<List<AirportsToBeReached>> response = new MyResponse<>();
         Aggregation aggregation = Aggregation.newAggregation(
-        // unwind tickets
-        Aggregation.unwind("tickets"),
-        // group by departure.airfieldName
-        Aggregation.group("departure.airfieldName").count().as("totalBookings"),
-        Aggregation.sort(Sort.by(Sort.Direction.DESC, "totalBookings")),
+                // unwind tickets
+                Aggregation.unwind("tickets"),
+                // group by departure.airfieldName
+                Aggregation.group("departure.airfieldName").count().as("totalBookings"),
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, "totalBookings")),
                 Aggregation.limit(5));
 
-        AggregationResults<AirportsToBeReached> result = mongoTemplate.aggregate(aggregation, "flights", AirportsToBeReached.class);
+        AggregationResults<AirportsToBeReached> result = mongoTemplate.aggregate(aggregation, "flights",
+                AirportsToBeReached.class);
         List<AirportsToBeReached> top5MostVisitedAirports = result.getMappedResults();
         response.setStatus(200);
         response.setMessage("Thống kê 5 sân bay được đến nhiều nhất thành công");
         response.setData(top5MostVisitedAirports);
+        return response;
+    }
+
+    public MyResponse<String> payTicket(String email, String flightCode, String ticketId, Payment payment) {
+        MyResponse<String> response = new MyResponse<>();
+
+        Optional<Flight> flightOptional = flightRepository.findByFlightCode(flightCode);
+        if (!flightOptional.isPresent()) {
+            response.setStatus(404);
+            response.setMessage("Không tìm thấy chuyến bay");
+            return response;
+        }
+        Flight flight = flightOptional.get();
+        Optional<Ticket> ticketOptional = flight.getTickets().stream().filter(t -> t.getTicketId().equals(ticketId))
+                .findFirst();
+        if (!ticketOptional.isPresent()) {
+            response.setStatus(404);
+            response.setMessage("Không tìm thấy vé");
+            return response;
+        }
+        Ticket ticket = ticketOptional.get();
+        if (!ticket.getContactInfo().getEmail().equals(email)) {
+            response.setStatus(403);
+            response.setMessage("Không thể thanh toán vé của người khác");
+            return response;
+        }
+        if (ticket.isCanceled()) {
+            response.setStatus(400);
+            response.setMessage("Vé đã hủy không thể thanh toán");
+            return response;
+        }
+        if (ticket.isConfirmed()) {
+            response.setStatus(400);
+            response.setMessage("Vé đã xác nhận không thể thanh toán");
+            return response;
+        }
+
+        payment.setPaymentId(TourUtils.generatePaymentId(email));
+        payment.setPaymentDate(new Date());
+
+        ticket.setPayment(payment);
+        flightRepository.save(flight);
+
+        response.setStatus(200);
+        response.setMessage("Thanh toán vé thành công");
+        response.setData(ticket.getTicketId());
+        return response;
+    }
+
+    public MyResponse<Double> revenueByNDays(int days) {
+        MyResponse<Double> response = new MyResponse<>();
+        LocalDate numberDaysAgo = LocalDate.now().minusDays(days);
+        Date numberDaysAgoDate = Date.from(numberDaysAgo.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.unwind("tickets"),
+                // Chỉ lấy những vé đã xác nhận
+                Aggregation.match(Criteria.where("tickets.bookingDate").gte(numberDaysAgoDate)
+                        .and("tickets.confirmed").is(true)),
+
+                Aggregation.group().sum("tickets.totalPrice").as("totalRevenue"));
+
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "flights", Document.class);
+        Document result = results.getUniqueMappedResult();
+        if (result == null) {
+            response.setStatus(404);
+            response.setMessage("Không lấy được doanh thu");
+        } else {
+            double totalRevenue = result.getDouble("totalRevenue");
+            response.setStatus(200);
+            response.setMessage("Doanh thu trong " + days + " ngày gần nhất là: " + totalRevenue);
+            response.setData(totalRevenue);
+        }
+        return response;
+    }
+
+    public MyResponse<Integer> countBookedTicketsByNDays(int days) {
+        MyResponse<Integer> response = new MyResponse<>();
+        LocalDate numberDaysAgo = LocalDate.now().minusDays(days);
+        Date numberDaysAgoDate = Date.from(numberDaysAgo.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.unwind("tickets"),
+                Aggregation.match(Criteria.where("tickets.bookingDate").gte(numberDaysAgoDate)),
+                Aggregation.group().count().as("totalBookedTickets"));
+
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "flights", Document.class);
+        Document result = results.getUniqueMappedResult();
+        if (result == null) {
+            response.setStatus(404);
+            response.setMessage("Không lấy được số vé đã đặt");
+        } else {
+            int totalBookedTickets = result.getInteger("totalBookedTickets");
+            response.setStatus(200);
+            response.setMessage("Số vé đã đặt trong " + days + " ngày gần nhất là: " + totalBookedTickets);
+            response.setData(totalBookedTickets);
+        }
+        return response;
+    }
+
+    public MyResponse<AppUser> mostBookingCustomerByNDays(int n) {
+        MyResponse<AppUser> response = new MyResponse<>();
+
+        LocalDate numberDaysAgo = LocalDate.now().minusDays(n);
+        Date numberDaysAgoDate = Date.from(numberDaysAgo.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("flightBookings.bookingDate").gte(numberDaysAgoDate));
+        query.with(Sort.by(Sort.Order.desc("flightBookings.bookingDate")));
+        query.limit(1);
+        AppUser user = mongoTemplate.findOne(query, AppUser.class);
+        if (user == null) {
+            response.setStatus(404);
+            response.setMessage("Không tìm thấy người dùng");
+        } else {
+            response.setStatus(200);
+            response.setMessage("Người dùng đặt vé nhiều nhất trong " + n + " ngày gần nhất");
+            response.setData(user);
+        }
         return response;
     }
 

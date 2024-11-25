@@ -44,7 +44,7 @@ const navigation = [
       { name: "Miền Nam", href: "/tours?region=Miền Nam" },
     ],
   },
-  { name: "Vé máy bay", href: "#" },
+  { name: "Vé máy bay", href: "/flights?departure=SGN&destination=HAN" },
   { name: "Khách sạn", href: "#" },
   {
     name: "Xem thêm",

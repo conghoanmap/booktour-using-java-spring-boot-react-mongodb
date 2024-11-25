@@ -756,55 +756,46 @@ const TourDetail = (props) => {
                     }
                   >
                     <option>Chọn ngày xuất phát</option>
-                    {tour?.departureDates?.sort().map((date, index) => (
-                      // Đã qua ngày thì disable
-                      <option
-                        key={index}
-                        value={date}
-                        disabled={
-                          new Date(date) < new Date() ||
-                          tour?.maxPeople -
-                            tour?.bookTours?.reduce(
-                              (total, booking) =>
-                                total +
-                                booking.adultNumber +
-                                booking.childrenNumber +
-                                booking.youngChildrenNumber +
-                                booking.babyNumber,
-                              0
-                            ) ===
-                            0
-                        }
-                      >
-                        {formatDateYYYYMMDD(date)}{" "}
-                        {tour?.discount &&
-                          tour?.discount?.discountType === "day" &&
-                          tour?.discount?.departureDates?.includes(date) && (
-                            <span className="text-red-400">
-                              {" "}
-                              (Giảm giá {tour?.discount.percentDiscount}%)
-                            </span>
-                          )}{" "}
-                        (còn{" "}
-                        {
-                          // Số chỗ còn trống
-                          tour?.maxPeople -
-                            tour?.bookTours
-                              ?.filter((bt) => bt.departureDate === date)
-                              .reduce(
-                                (total, booking) =>
-                                  total +
-                                  booking.adultNumber +
-                                  booking.childrenNumber +
-                                  booking.youngChildrenNumber +
-                                  booking.babyNumber,
-                                0
-                              )
-                        }{" "}
-                        suất)
-                        {new Date(date) < new Date() && "(Đã qua)"}
-                      </option>
-                    ))}
+                    {tour?.departureDates
+                      ?.filter(
+                        (date) =>
+                          date >=
+                          new Date().toISOString().split("T")[0]
+                      )
+                      .sort()
+                      .map((date, index) => (
+                        <option
+                          key={index}
+                          value={date}
+                        >
+                          {formatDateYYYYMMDD(date)}{" "}
+                          {tour?.discount &&
+                            tour?.discount?.discountType === "day" &&
+                            tour?.discount?.departureDates?.includes(date) && (
+                              <span className="text-red-400">
+                                {" "}
+                                (Giảm giá {tour?.discount.percentDiscount}%)
+                              </span>
+                            )}{" "}
+                          (còn{" "}
+                          {
+                            // Số chỗ còn trống
+                            tour?.maxPeople -
+                              tour?.bookTours
+                                ?.filter((bt) => bt.departureDate === date)
+                                .reduce(
+                                  (total, booking) =>
+                                    total +
+                                    booking.adultNumber +
+                                    booking.childrenNumber +
+                                    booking.youngChildrenNumber +
+                                    booking.babyNumber,
+                                  0
+                                )
+                          }{" "}
+                          suất)
+                        </option>
+                      ))}
                   </select>
                 </div>
                 <div className="mt-1">

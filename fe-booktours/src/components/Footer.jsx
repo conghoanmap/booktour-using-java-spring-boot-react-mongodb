@@ -1,30 +1,35 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { GlobalContext } from "../contexts/GlobalProvider";
+import useLogout from "../hooks/use-logout";
 /* This example requires Tailwind CSS v2.0+ */
 const navigation = {
-  solutions: [
-    { name: "Marketing", to: "#" },
-    { name: "Analytics", to: "#" },
-    { name: "Commerce", to: "#" },
-    { name: "Insights", to: "#" },
+  flights: [
+    { name: "Đến Hà Nội", to: "/flights?departure=HAN" },
+    { name: "Đến Sài Gòn", to: "/flights?departure=SGN" },
+    { name: "Tất cả", to: "/flights" },
   ],
   regions: [
-    { name: "Miền Bắc", to: `/tours?region=Miền%20Bắc` },
-    { name: "Miền Trung", to: `/tours?region=Miền%20Trung` },
-    { name: "Miền Nam", to: `/tours?region=Miền%20Nam` },
+    { name: "Du lịch Miền Bắc", to: `/tours?region=Miền%20Bắc` },
+    { name: "Du lịch Miền Trung", to: `/tours?region=Miền%20Trung` },
+    { name: "Du lịch Miền Nam", to: `/tours?region=Miền%20Nam` },
   ],
-  company: [
-    { name: "About", to: "#" },
-    { name: "Blog", to: "#" },
-    { name: "Jobs", to: "#" },
-    { name: "Press", to: "#" },
-    { name: "Partners", to: "#" },
+  pages: [
+    { name: "Trang chủ", to: "/" },
+    { name: "Về chúng tôi", to: "/about" },
+    { name: "Liên hệ", to: "/contact" },
+    { name: "Những câu hỏi thường gặp", to: "/faq" },
   ],
-  legal: [
-    { name: "Claim", to: "#" },
-    { name: "Privacy", to: "#" },
-    { name: "Terms", to: "#" },
+  userNavigation: [
+    { name: "Tài khoản của tôi", to: "#" },
+    { name: "Đổi mật khẩu", to: "#" },
+    { name: "Lịch sử đặt tour", to: "#" },
+    { name: "Lịch sử đặt vé máy bay", to: "#" },
+    { name: "Lịch sử đặt xe đưa đón", to: "#" },
+  ],
+  notLoggedInNavigation: [
+    { name: "Đăng nhập", to: "/login" },
+    { name: "Đăng ký", to: "/register" },
   ],
   social: [
     {
@@ -93,14 +98,13 @@ const navigation = {
 
 export default function Footer(props) {
   const context = useContext(GlobalContext);
+  const logout = useLogout();
   return (
     <footer className="bg-white" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div
-        className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8"
-      >
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
             <img
@@ -109,8 +113,7 @@ export default function Footer(props) {
               alt="Company name"
             />
             <p className="text-gray-500 text-base">
-              Making the world a better place through constructing elegant
-              hierarchies.
+              Khám phá những điểm đến mới lạ, hấp dẫn và thú vị với chúng tôi.
             </p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
@@ -129,10 +132,10 @@ export default function Footer(props) {
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
                 <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
-                  Solutions
+                  Chuyến bay
                 </h3>
                 <ul role="list" className="mt-4 space-y-4">
-                  {navigation.solutions.map((item) => (
+                  {navigation.flights.map((item) => (
                     <li key={item.name}>
                       <Link
                         to={item.to}
@@ -165,10 +168,10 @@ export default function Footer(props) {
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
                 <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
-                  Company
+                  Trang
                 </h3>
                 <ul role="list" className="mt-4 space-y-4">
-                  {navigation.company.map((item) => (
+                  {navigation.pages.map((item) => (
                     <li key={item.name}>
                       <Link
                         to={item.to}
@@ -182,19 +185,42 @@ export default function Footer(props) {
               </div>
               <div className="mt-12 md:mt-0">
                 <h3 className="text-sm font-semibold text-gray-400 tracking-wider uppercase">
-                  Legal
+                  Tài khoản
                 </h3>
                 <ul role="list" className="mt-4 space-y-4">
-                  {navigation.legal.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        to={item.to}
-                        className="text-base text-gray-500 hover:text-gray-900"
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
+                  {context.isAuthenticated ? (
+                    <>
+                      {navigation.userNavigation.map((item) => (
+                        <li key={item.name}>
+                          <Link
+                            to={item.to}
+                            className="text-base text-gray-500 hover:text-gray-900"
+                          >
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                      <li>
+                        <span
+                          className="text-base text-red-500 hover:text-red-600 cursor-pointer"
+                          onClick={logout}
+                        >
+                          Đăng xuất
+                        </span>
+                      </li>
+                    </>
+                  ) : (
+                    navigation.notLoggedInNavigation.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          to={item.to}
+                          className="text-base text-gray-500 hover:text-gray-900"
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))
+                  )}
                 </ul>
               </div>
             </div>
@@ -202,7 +228,8 @@ export default function Footer(props) {
         </div>
         <div className="mt-12 border-t border-gray-200 pt-8">
           <p className="text-base text-gray-400 xl:text-center">
-            &copy; 2020 Workflow, Inc. All rights reserved.
+            &copy; 2024 Bản quyền thuộc về Lê Nguyễn Công Hoan, Hoàng Văn Chiến,
+            Lã Toàn Thắng
           </p>
         </div>
       </div>

@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class Airline {
     private String airlineId; // Mã hãng hàng không
     private String airlineName; // Tên hãng hàng không
+    private String logo; // Logo hãng hàng không
 }

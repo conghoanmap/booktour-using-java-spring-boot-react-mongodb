@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.be_booktours.dtos.flight.BookTicketDto;
 import com.spring.be_booktours.entities.flight_entities.Ticket;
+import com.spring.be_booktours.entities.sub_entities.Payment;
 import com.spring.be_booktours.helpers.FlightQuery;
 import com.spring.be_booktours.services.FlightService;
 import jakarta.validation.Valid;
@@ -57,37 +58,46 @@ public class FlightController {
     }
 
     // Đặt vé
-    @PostMapping("/book-ticket/{flightId}")
+    @PostMapping("/book-ticket/{flightCode}")
     @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<?> bookTicket(@PathVariable String flightId, @Valid @RequestBody BookTicketDto bookTicketDto) {
+    public ResponseEntity<?> bookTicket(@PathVariable String flightCode, @Valid @RequestBody BookTicketDto bookTicketDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         bookTicketDto.getContactInfo().setEmail(email);
-        return ResponseEntity.ok(flightService.bookTicket(flightId, bookTicketDto));
+        return ResponseEntity.ok(flightService.bookTicket(flightCode, bookTicketDto));
     }
 
     // Tính tiền
-    @GetMapping("/calculate-price/{flightId}")
+    @GetMapping("/calculate-price/{flightCode}")
     @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<?> calculatePrice(@PathVariable String flightId, @Valid @RequestBody Ticket ticket) {
-        return ResponseEntity.ok(flightService.calculatePrice(flightId, ticket));
+    public ResponseEntity<?> calculatePrice(@PathVariable String flightCode, @Valid @RequestBody Ticket ticket) {
+        return ResponseEntity.ok(flightService.calculatePrice(flightCode, ticket));
     }
 
     // Xem thông tin đặt vé
-    @GetMapping("/ticket-info/{flightId}/{ticketId}")
+    @GetMapping("/ticket-info/{flightCode}/{ticketId}")
     @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<?> getTicketInfo(@PathVariable String flightId, @PathVariable String ticketId) {
+    public ResponseEntity<?> getTicketInfo(@PathVariable String flightCode, @PathVariable String ticketId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return ResponseEntity.ok(flightService.getTicketInfo(flightId, ticketId, email));
+        return ResponseEntity.ok(flightService.getTicketInfo(flightCode, ticketId, email));
+    }
+
+    // Thanh toán
+    @PostMapping("/pay-ticket/{flightCode}/{ticketId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
+    public ResponseEntity<?> payTicket(@PathVariable String flightCode, @PathVariable String ticketId, @RequestBody Payment payment) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return ResponseEntity.ok(flightService.payTicket(email, flightCode, ticketId, payment));
     }
 
     // Hủy vé
-    @PutMapping("/cancel-ticket/{flightId}/{ticketId}")
+    @PutMapping("/cancel-ticket/{flightCode}/{ticketId}")
     @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
-    public ResponseEntity<?> cancelTicket(@PathVariable String flightId, @PathVariable String ticketId) {
+    public ResponseEntity<?> cancelTicket(@PathVariable String flightCode, @PathVariable String ticketId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return ResponseEntity.ok(flightService.cancelTicket(flightId, ticketId, email));
+        return ResponseEntity.ok(flightService.cancelTicket(flightCode, ticketId, email));
     }
 }

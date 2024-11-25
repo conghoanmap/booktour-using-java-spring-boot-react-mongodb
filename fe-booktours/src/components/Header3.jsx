@@ -26,7 +26,7 @@ const user = {
 const navigation = [
   { name: "Trang chủ", href: "/" },
   { name: "Tour", href: "/tours" },
-  { name: "Vé máy bay", href: "#" },
+  { name: "Vé máy bay", href: "/flights" },
   { name: "Khách sạn", href: "#" },
   { name: "Giới thiệu", href: "/about" },
   { name: "Liên hệ", href: "/contact" },

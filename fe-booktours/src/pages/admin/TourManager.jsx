@@ -65,26 +65,6 @@ const TourManagement = () => {
     fetchTours();
   }, [objectQuery]);
 
-  const handleBackup = async () => {
-    try {
-      const response = await DataService.backupCollection("tours");
-      alert(response.message);
-    } catch (error) {
-      // console.error(error);
-      alert("Sao lưu dữ liệu không thành công, vui lòng thử lại sau");
-    }
-  };
-
-  const handleRestore = async () => {
-    try {
-      const response = await DataService.restoreCollection("tours");
-      alert(response.message);
-    } catch (error) {
-      // console.error(error);
-      alert("Phục hồi dữ liệu không thành công, vui lòng thử lại sau");
-    }
-  };  
-
   return (
     <>
       <TourCreate
@@ -120,28 +100,6 @@ const TourManagement = () => {
                         aria-hidden="true"
                       />
                       Thêm tour mới
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                      onClick={handleBackup}
-                    >
-                      <DatabaseIcon
-                        className="-ml-1 mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      Sao lưu
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-rose-600 hover:bg-rose-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
-                      onClick={handleRestore}
-                    >
-                      <DatabaseIcon
-                        className="-ml-1 mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      Phục hồi
                     </button>
                   </div>
                   <div className="ml-auto md:flex gap-3">

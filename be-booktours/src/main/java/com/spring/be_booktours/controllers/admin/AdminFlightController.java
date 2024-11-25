@@ -24,7 +24,8 @@ public class AdminFlightController {
     @Autowired
     private FlightService flightService;
 
-    // Thêm chuyến bay(chỉ truyền vào các thông tin cần thiết, các thông tin khác sẽ được tạo tự động)
+    // Thêm chuyến bay(chỉ truyền vào các thông tin cần thiết, các thông tin khác sẽ
+    // được tạo tự động)
     @PostMapping("/create-default-flight")
     public ResponseEntity<?> createDefaultFlight(@RequestBody DefaultFlight defaultFlight) {
         return ResponseEntity.ok(flightService.createDefaultFlight(defaultFlight));
@@ -50,22 +51,34 @@ public class AdminFlightController {
         return ResponseEntity.ok(flightService.revenueByAirline());
     }
 
-    //5 chuyến bay thường xuyên nhất
+    // 5 chuyến bay thường xuyên nhất
     @GetMapping("/top-5-most-frequent-flights")
     public ResponseEntity<?> top5MostFrequentFlights() {
         return ResponseEntity.ok(flightService.top5MostFrequentFlights());
     }
 
-    // Thống kê tủy lệ vé bị hủy
+    // Thống kê tỉ lệ vé bị hủy
     @GetMapping("/cancellation-rate")
     public ResponseEntity<?> cancellationRate() {
         return ResponseEntity.ok(flightService.cancellationRate());
     }
 
-    // 5 Sân bay được đến nhiều nhất
-    @GetMapping("/top-5-most-visited-airports")
-    public ResponseEntity<?> top5MostVisitedAirports() {
-        return ResponseEntity.ok(flightService.top5MostVisitedAirports());
+    // Doanh thu theo n ngày gần nhất
+    @GetMapping("/revenue-by-n-days/{n}")
+    public ResponseEntity<?> revenueByNDays(@PathVariable int n) {
+        return ResponseEntity.ok(flightService.revenueByNDays(n));
+    }
+
+    // Đếm các vé đã đặt trong n ngày gần nhất
+    @GetMapping("/count-booked-tickets-by-n-days/{n}")
+    public ResponseEntity<?> countBookedTicketsByNDays(@PathVariable int n) {
+        return ResponseEntity.ok(flightService.countBookedTicketsByNDays(n));
+    }
+
+    // Khách hàng đặt vé nhiều nhất trong n ngày gần nhất
+    @GetMapping("/most-booking-customer-by-n-days/{n}")
+    public ResponseEntity<?> mostBookingCustomerByNDays(@PathVariable int n) {
+        return ResponseEntity.ok(flightService.mostBookingCustomerByNDays(n));
     }
 
 }

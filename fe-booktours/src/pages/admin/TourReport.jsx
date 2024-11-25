@@ -99,12 +99,12 @@ const TourReport = () => {
           setLoading(false);
           const data = response.data;
           setTotalBookedOfRegions({
-            labels: data
+            labels: data?.length > 0
               ? data?.map((item) => `${item.regionName}(${item.totalBooking})`)
               : ["Red", "Blue", "Yellow"],
             datasets: [
               {
-                data: data
+                data: data?.length > 0
                   ? data?.map((item) => item.totalBooking)
                   : [300, 50, 100],
                 // Màu ngẫu nhiên
@@ -141,13 +141,13 @@ const TourReport = () => {
         newRevenues.reverse();
         // console.log(newRevenues);
         setTotalBookedOf7Days({
-          labels: newRevenues
+          labels: newRevenues?.length > 0
             ? newRevenues?.map((item) => item.day)
             : ["2021-09-01", "2021-09-02", "2021-09-03"],
           datasets: [
             {
               label: "Doanh thu",
-              data: newRevenues
+              data: newRevenues?.length > 0
                 ? newRevenues?.map((item) => item.revenue)
                 : [100, 200, 300],
               backgroundColor: "rgba(75, 192, 192, 0.2)", // Màu nền cho các cột
@@ -196,7 +196,7 @@ const TourReport = () => {
 
   return (
     <main className="flex-1">
-      <div className="py-6 h-screen">
+      <div className="py-6">
         <div className="max-w-7xl mx-auto sm:px-6 md:px-8">
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             <div className="rounded-xl overflow-hidden bg-white">
@@ -259,7 +259,7 @@ const TourReport = () => {
                 <h5 className="text-black text-2xl m-auto text-center">Số lượng đặt: <span className="text-sky-700 text-3xl font-body">{maxBookedTourOfMonth?.totalBookings}</span></h5>
               </div>
             </div>
-            <div className="rounded-xl overflow-hidden bg-white lg:col-span-3 p-5">
+            <div className="rounded-xl overflow-hidden lg:col-span-3 p-5">
               <h1 className="text-center font-bold text-sm mb-2">
                 5 Tour có nhiều đánh giá tích cực
               </h1>

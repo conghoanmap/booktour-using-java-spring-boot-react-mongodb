@@ -5,11 +5,13 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { CheckIcon, ExclamationIcon } from "@heroicons/react/solid";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import AirportTransferService from "../services/AirportTransferService";
 import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../contexts/GlobalProvider";
 
 const BookRide = (props) => {
+  const context = useContext(GlobalContext);
   const navigate = useNavigate();
   const [bookRide, setBookRide] = useState({
     ...props.state,
@@ -38,6 +40,9 @@ const BookRide = (props) => {
   }, [bookRide.time]);
 
   const handleBookRide = async () => {
+    if(!context.isAuthenticated || !context.profile?.verifiedEmail) {
+      navigate("/login");
+    }
     try {
       const bookingRide = {
         address: bookRide.address,

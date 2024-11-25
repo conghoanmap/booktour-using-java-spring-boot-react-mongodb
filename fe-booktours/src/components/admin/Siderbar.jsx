@@ -30,25 +30,34 @@ import DataService from "../../services/DataService";
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon },
   {
+    id: "tours",
     name: "Tour du lịch",
     href: "/admin/tour-management",
     icon: LocationMarkerIcon,
-    // children: [
-    //   { name: "Thêm", href: "#" },
-    //   { name: "Xóa", href: "#" },
-    //   { name: "Sửa", href: "#" },
-    // ],
+    children: [{ name: "Báo cáo", href: "/admin/tour-report" }],
   },
-  { name: "Vé máy bay(chưa hoàn thiện)", href: "#", icon: TicketIcon },
+  {
+    id: "flights",
+    name: "Vé máy bay",
+    href: "/admin/flight-management",
+    icon: TicketIcon,
+    children: [{ name: "Báo cáo", href: "/admin/flight-report" }],
+  },
   { name: "Khách sạn(chưa hoàn thiện)", href: "#", icon: OfficeBuildingIcon },
-  { name: "Đưa đón sân bay", href: "/admin/airport-transfer-management", icon: FiHardDrive},
-  { name: "Người dùng", href: "/admin/user-management", icon: UsersIcon },
   {
-    name: "Reports",
-    href: "/admin/tour-report",
-    icon: ChartBarIcon,
+    id: "airportTransfers",
+    name: "Đưa đón sân bay",
+    href: "/admin/airport-transfer-management",
+    icon: FiHardDrive,
   },
   {
+    id: "appusers",
+    name: "Người dùng",
+    href: "/admin/user-management",
+    icon: UsersIcon,
+  },
+  {
+    id: "discounts",
     name: "Dịch vụ giảm giá",
     href: "/admin/discount-management",
     icon: TagIcon,
@@ -74,18 +83,24 @@ const Siderbar = ({ children }) => {
   const logout = useLogout();
   const navigate = useNavigate();
 
-  const handleBackup = async () => {
+  const handleBackup = async (collection) => {
     try {
-      const response = await DataService.backup();
+      const response =
+        collection?.length < 1
+          ? await DataService.backup()
+          : await DataService.backupCollection(collection);
       alert(response.message);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleRestore = async () => {
+  const handleRestore = async (collection) => {
     try {
-      const response = await DataService.restore();
+      const response =
+        collection < 1
+          ? await DataService.restore()
+          : await DataService.restoreCollection(collection);
       alert(response.message);
     } catch (error) {
       console.error(error);
@@ -185,6 +200,23 @@ const Siderbar = ({ children }) => {
                               {child.name}
                             </li>
                           ))}
+                          {item.id && (
+                            <>
+                              {" "}
+                              <li
+                                className="pl-10 px-2 py-2 text-sm font-medium rounded-md cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                onClick={() => handleBackup(item.id)}
+                              >
+                                Sao lưu dữ liệu
+                              </li>
+                              <li
+                                className="pl-10 px-2 py-2 text-sm font-medium rounded-md cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                onClick={() => handleRestore(item.id)}
+                              >
+                                Phục hồi dữ liệu
+                              </li>
+                            </>
+                          )}
                         </ul>
                       )}
                     </React.Fragment>
@@ -292,13 +324,29 @@ const Siderbar = ({ children }) => {
                           {child.name}
                         </li>
                       ))}
+                      {item.id && (
+                        <>
+                          <li
+                            className="pl-10 px-2 py-2 text-sm font-medium rounded-md cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            onClick={() => handleBackup(item.id)}
+                          >
+                            Sao lưu dữ liệu
+                          </li>
+                          <li
+                            className="pl-10 px-2 py-2 text-sm font-medium rounded-md cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            onClick={() => handleRestore(item.id)}
+                          >
+                            Phục hồi dữ liệu
+                          </li>
+                        </>
+                      )}
                     </ul>
                   )}
                 </React.Fragment>
               ))}
               <p
                 className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                onClick={handleBackup}
+                onClick={() => handleBackup("")}
               >
                 <DatabaseIcon
                   className="text-teal-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-teal-600"
@@ -308,7 +356,7 @@ const Siderbar = ({ children }) => {
               </p>
               <p
                 className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                onClick={handleRestore}
+                onClick={() => handleRestore("")}
               >
                 <DatabaseIcon
                   className="text-rose-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-rose-600"

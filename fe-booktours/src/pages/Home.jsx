@@ -11,25 +11,21 @@ import AirportTransferSearchBox from "../components/AirportTransferSearchBox";
 
 const tabs = [
   {
-    image: "/src/assets/img/destinations/2/4.png",
     header: "Lựa chọn những tour du lịch phù hợp với nhu cầu của bạn",
     title: "Tour du lịch",
     component: TourSearchBox,
   },
   {
-    image: "/src/assets/img/hotels/4.png",
     header: "Lựa chọn những chuyến bay phù hợp với nhu cầu của bạn",
     title: "Vé máy bay",
     component: FlightSearchBox,
   },
   {
-    image: "/src/assets/img/flights/1.png",
     header: "Lựa chọn những khánh sạn làm cho bạn cảm thấy thoải mái",
     title: "Khách sạn",
     component: HotelSearchBox,
   },
   {
-    image: "/src/assets/img/flights/1.png",
     header: "Giúp bạn di chuyển một cách thuận tiện và nhanh chóng",
     title: "Đưa đón sân bay",
     component: AirportTransferSearchBox,
@@ -66,7 +62,7 @@ const Home = () => {
   return (
     <>
       <div
-        className={`flex bg-cover saturate-50 bg-center h-122 mt-5 border border-solid bg-[url('${tabs[currentTab].image}')]`}
+        className={`flex bg-cover saturate-50 bg-center h-122 mt-5 border border-solid bg-[url('/src/assets/img/destinations/2/4.png')]`}
       >
         <div className="shadow-md -mb-8 mt-auto mx-auto md:w-[800px] lg:w-[1000px] bg-white p-5 rounded-lg">
           <h3 className="text-center text-gray-700 mt-5 text-3xl uppercase font-bold">

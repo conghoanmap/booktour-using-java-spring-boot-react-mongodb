@@ -16,4 +16,5 @@ public interface FlightRepository extends MongoRepository<Flight, String> {
     List<Flight> findByAirlineAirlineIdAndDepartureAirfieldIdAndDestinationAirfieldId(String airlineAirlineId,
             String departureAirfieldId,
             String destinationAirfieldId);
+
 }
