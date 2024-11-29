@@ -28,13 +28,25 @@ import useLogout from "../../hooks/use-logout";
 import DataService from "../../services/DataService";
 
 const navigation = [
-  { name: "Dashboard", href: "/admin", icon: HomeIcon },
+  {
+    name: "Dashboard",
+    href: "/admin",
+    icon: HomeIcon,
+    roles: [
+      "ROLE_ADMIN",
+      "ROLE_TOUR_MANAGER",
+      "ROLE_FLIGHT_MANAGER",
+      "ROLE_HOTEL_MANAGER",
+      "ROLE_AIRPORT_TRANSFER_MANAGER",
+    ],
+  },
   {
     id: "tours",
     name: "Tour du lịch",
     href: "/admin/tour-management",
     icon: LocationMarkerIcon,
-    children: [{ name: "Báo cáo", href: "/admin/tour-report" }],
+    // children: [{ name: "Báo cáo", href: "/admin/tour-report" }],
+    roles: ["ROLE_ADMIN", "ROLE_TOUR_MANAGER"],
   },
   {
     id: "flights",
@@ -42,19 +54,29 @@ const navigation = [
     href: "/admin/flight-management",
     icon: TicketIcon,
     children: [{ name: "Báo cáo", href: "/admin/flight-report" }],
+    roles: ["ROLE_ADMIN", "ROLE_FLIGHT_MANAGER"],
   },
-  { name: "Khách sạn(chưa hoàn thiện)", href: "#", icon: OfficeBuildingIcon },
+  {
+    id: "hotels",
+    name: "Khách sạn",
+    href: "/admin/hotel-management",
+    icon: OfficeBuildingIcon,
+    // children: [{ name: "Báo cáo", href: "/admin/hotel-report" }],
+    roles: ["ROLE_ADMIN", "ROLE_HOTEL_MANAGER"],
+  },
   {
     id: "airportTransfers",
     name: "Đưa đón sân bay",
     href: "/admin/airport-transfer-management",
     icon: FiHardDrive,
+    roles: ["ROLE_ADMIN", "ROLE_AIRPORT_TRANSFER_MANAGER"],
   },
   {
     id: "appusers",
     name: "Người dùng",
     href: "/admin/user-management",
     icon: UsersIcon,
+    roles: ["ROLE_ADMIN"],
   },
   {
     id: "discounts",
@@ -66,6 +88,7 @@ const navigation = [
       // { name: "Xóa", href: "#" },
       // { name: "Sửa", href: "#" },
     ],
+    roles: ["ROLE_ADMIN", "ROLE_TOUR_MANAGER"],
   },
   // { name: "Quản lý file(chưa hoàn thiện)", href: "#", icon: FolderOpenIcon },
 ];
@@ -177,7 +200,11 @@ const Siderbar = ({ children }) => {
                           index === activeTab
                             ? "bg-gray-100 text-gray-900"
                             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                        } group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                          // Có quyền truy cập
+                          !item.roles.includes(context.profile?.role) &&
+                          "hidden"
+                        }`}
                       >
                         <item.icon
                           className={`${
@@ -301,7 +328,12 @@ const Siderbar = ({ children }) => {
                       index === activeTab
                         ? "bg-gray-100 text-gray-900"
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                    } group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                      // Có quyền truy cập
+                      !context.profile?.roles?.some((role) =>
+                        item.roles.includes(role)
+                      ) && "hidden"
+                    }`}
                   >
                     <item.icon
                       className={`${
@@ -344,26 +376,30 @@ const Siderbar = ({ children }) => {
                   )}
                 </React.Fragment>
               ))}
-              <p
-                className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                onClick={() => handleBackup("")}
-              >
-                <DatabaseIcon
-                  className="text-teal-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-teal-600"
-                  aria-hidden="true"
-                />
-                Sao lưu dữ liệu
-              </p>
-              <p
-                className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                onClick={() => handleRestore("")}
-              >
-                <DatabaseIcon
-                  className="text-rose-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-rose-600"
-                  aria-hidden="true"
-                />
-                Phục hồi dữ liệu
-              </p>
+              {context.profile?.roles?.includes("ROLE_ADMIN") && (
+                <>
+                  <p
+                    className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    onClick={() => handleBackup("")}
+                  >
+                    <DatabaseIcon
+                      className="text-teal-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-teal-600"
+                      aria-hidden="true"
+                    />
+                    Sao lưu dữ liệu
+                  </p>
+                  <p
+                    className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    onClick={() => handleRestore("")}
+                  >
+                    <DatabaseIcon
+                      className="text-rose-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-rose-600"
+                      aria-hidden="true"
+                    />
+                    Phục hồi dữ liệu
+                  </p>
+                </>
+              )}
             </nav>
           </div>
           <div className="flex-shrink-0 flex border-t border-gray-200 p-4">

@@ -12,17 +12,18 @@ import com.spring.be_booktours.services.DataService;
 
 @RestController
 @RequestMapping("/api/v1/admin/data")
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 public class DataController {
 
     @Autowired
     private DataService dataService;
 
     @GetMapping("/backup")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> backupData() {
         return ResponseEntity.ok(dataService.backupData("D:\\backupmongodb"));
     }
 
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @GetMapping("/restore")
     public ResponseEntity<?> restoreData() {
         return ResponseEntity.ok(dataService.restoreData("D:\\backupmongodb"));

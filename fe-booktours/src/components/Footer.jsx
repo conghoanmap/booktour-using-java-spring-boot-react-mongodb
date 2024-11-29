@@ -155,7 +155,7 @@ export default function Footer(props) {
                   {navigation.regions.map((item) => (
                     <li key={item.name}>
                       <Link
-                        to={`/tours?region=${item.name}`}
+                        to={`${item.to}`}
                         className="text-base text-gray-500 hover:text-gray-900"
                       >
                         {item.name}

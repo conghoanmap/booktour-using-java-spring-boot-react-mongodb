@@ -363,4 +363,19 @@ public class UserService {
         return response;
     }
 
+    public MyResponse<?> DeleteUser(String email) {
+        MyResponse<?> response = new MyResponse<>();
+        Optional<AppUser> appuser = usersRepo.findByEmail(email);
+        if (appuser.isEmpty()) {
+            response.setStatus(404);
+            response.setMessage("Tài khoản không tồn tại!");
+            return response;
+        } else {
+            usersRepo.delete(appuser.get());
+            response.setStatus(200);
+            response.setMessage("Xóa tài khoản thành công!");
+            return response;
+        }
+    }
+
 }

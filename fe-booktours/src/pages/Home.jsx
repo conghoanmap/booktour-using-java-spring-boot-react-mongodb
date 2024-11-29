@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import TourSearchBox from "../components/TourSearchBox";
 import FlightSearchBox from "../components/FlightSearchBox";
 import HotelSearchBox from "../components/HotelSearchBox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OtherTours from "../components/OtherTours";
 import { ExternalLinkIcon } from "@heroicons/react/solid";
 import DiscountService from "../services/DiscountService";
 import { GlobalContext } from "../contexts/GlobalProvider";
 import AirportTransferSearchBox from "../components/AirportTransferSearchBox";
+import OtherFlight from "../components/OtherFlight";
 
 const tabs = [
   {
@@ -49,7 +50,52 @@ const whyChooseUs = [
     icon: "/src/assets/img/featureIcons/3/3.svg",
   },
 ];
+
+const hotelData = [
+  {
+    id: "ba-ria-vung-tau",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_334740/9ebd50e91e3ca8c657b2b74521d41cc9.jpg",
+    name: "Khách sạn ở Vũng Tàu",
+  },
+  {
+    id: "ha-noi",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_335324/69f8a5cff57f1e53f14dab6b0ddc2ab7.jpg",
+    name: "Khách sạn ở Hà Nội",
+  },
+  {
+    id: "sai-gon",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_312508/473c2077df2722e1d8afdf3eb30eadea.jpg",
+    name: "Khách sạn Sài Gòn",
+  },
+  {
+    id: "khanh-hoa",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_312522/fa23c83d7b5fa728de3b93773bde4e38.jpg",
+    name: "Khách sạn Khách Hòa",
+  },
+  {
+    id: "da-nang",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_334946/24ce1389906d469cda33cc033a8295c7.jpg",
+    name: "Khách sạn Đà Nẵng",
+  },
+  {
+    id: "hai-phong",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_312504/700bcf731a3e6ca1fdff21d30dfe1da0.jpg",
+    name: "Khách sạn Hải Phòng",
+  },
+  {
+    id: "phu-yen",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_312560/ab1e3223813f92ae9a4b0868849b3831.jpg",
+    name: "Khách sạn Phú Yên",
+  },
+  {
+    id: "quang-ninh",
+    img: "https://cdn2.vietnambooking.com/wp-content/uploads/hotel_pro/hotel_312517/d7aa570209684218dd0cd6add3f76f03.jpg",
+    name: "Khách sạn Quảng Ninh",
+  },
+];
+
 const Home = () => {
+  const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState(0);
   const CurrentComponent = tabs[currentTab].component;
   const context = useContext(GlobalContext);
@@ -299,6 +345,59 @@ const Home = () => {
             </Link>
           </div>
           <OtherTours sortType="desc" />
+        </div>
+      </div>
+      <div className="bg-white mt-5 py-10">
+      <div className="container mx-auto p-5 mt-10">
+          <h1 className="text-3xl font-bold">
+            Điểm đến hàng đầu cho các chuyến đi Việt Nam
+          </h1>
+          <p className="mt-3">
+            Những điểm đến tại Việt Nam đáng để ghé thăm ít nhất một lần trong
+            đời
+          </p>
+          <div className="mt-3 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {hotelData.map((hotel, index) => (
+              <div
+                key={index}
+                className="rounded-lg overflow-hidden h-[346px] relative cursor-pointer"
+                onClick={() => navigate(`/hotels?locationId=${hotel.id}`)}
+              >
+                <img
+                  src={hotel.img}
+                  alt={hotel.name}
+                  className="object-cover w-full h-full"
+                />
+                <div className="absolute bottom-2 left-2">
+                  <h3 className="text-white text-2xl font-semibold">
+                    {hotel.name}
+                  </h3>
+                  <p className="text-white">
+                    <span className="text-xl font-semibold">
+                      {hotel.accommodation}
+                    </span>{" "}
+                    chỗ ở
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="bg-sky-50 mt-5 py-10">
+        <div className="container mx-auto">
+          <div className="flex py-5">
+            <h1 className="text-center text-sky-700 font-extrabold text-3xl my-auto">
+              Các chuyến bay phổ biến
+            </h1>
+            <Link
+              to="/flight?departure=HAN&destination=SGN"
+              className="ml-auto my-auto inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+            >
+              Xem tất cả
+            </Link>
+          </div>
+          <OtherFlight />
         </div>
       </div>
     </>

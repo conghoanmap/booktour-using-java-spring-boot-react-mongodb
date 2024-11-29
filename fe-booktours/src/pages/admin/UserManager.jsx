@@ -66,12 +66,31 @@ const UserManagement = () => {
 
     try {
       const response = await AccountService.grantRevokeRole(
-        users[0].email,
+        users[selectUser].email,
         roles
       );
       console.log(response);
       if (response.status === 200) {
         setOpen(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteUser = async (email) => {
+    // Hỏi người dùng có chắc chắn muốn xóa không
+    if (!window.confirm("Bạn có chắc chắn muốn xóa tài khoản này không?")) {
+      return;
+    }
+    try {
+      const response = await AccountService.deleteUser(email);
+      if (response.status === 200) {
+        alert("Xóa tài khoản thành công");
+        const newUsers = users.filter((user) => user.email !== email);
+        setUsers(newUsers);
+      }else{
+        alert("Xóa tài khoản thất bại, " + response.message);
       }
     } catch (error) {
       console.error(error);
@@ -285,16 +304,21 @@ const UserManagement = () => {
                                   {user.bookingHistories?.length}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                  <Link
-                                    to="#"
-                                    className="text-sky-600 hover:text-ssky00"
+                                  <p
+                                    className="cursor-pointer text-sky-600 hover:text-sky-700"
                                     onClick={() => {
                                       setOpen(true);
                                       setSelectUser(index);
                                     }}
                                   >
                                     Phân quyền
-                                  </Link>
+                                  </p>
+                                  <p
+                                    className="cursor-pointer text-red-500 hover:text-red-600"
+                                    onClick={() => handleDeleteUser(user.email)}
+                                  >
+                                    Xóa tài khoản
+                                  </p>
                                 </td>
                               </tr>
                             ))}

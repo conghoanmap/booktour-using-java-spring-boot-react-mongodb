@@ -27,7 +27,7 @@ const navigation = [
   { name: "Trang chủ", href: "/" },
   { name: "Tour", href: "/tours" },
   { name: "Vé máy bay", href: "/flights" },
-  { name: "Khách sạn", href: "#" },
+  { name: "Khách sạn", href: "/hotel" },
   { name: "Giới thiệu", href: "/about" },
   { name: "Liên hệ", href: "/contact" },
 ];
@@ -170,7 +170,7 @@ const Header3 = () => {
                               )}
                             </MenuItem>
                           ))}
-                          {context.roles?.includes("ROLE_ADMIN") && (
+                          {context.roles?.length && (
                             <MenuItem>
                               <Link
                                 to="/admin"
@@ -252,7 +252,7 @@ const Header3 = () => {
                       {item.name}
                     </DisclosureButton>
                   ))}
-                  {context.roles?.includes("ROLE_ADMIN") && (
+                  {context.roles?.length && (
                     <DisclosureButton
                       as="a"
                       to="/admin"

@@ -236,6 +236,15 @@ const FlightManager = () => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                   {flight.departure?.locationName}
+                                  <p>
+                                    (
+                                    {
+                                      flight.tickets?.filter(
+                                        (ticket) => ticket.confirmed === false
+                                      ).length
+                                    }{" "}
+                                    lượt đặt chưa xác nhận)
+                                  </p>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                   {flight.destination?.locationName}

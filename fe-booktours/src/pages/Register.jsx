@@ -25,7 +25,8 @@ const Register = () => {
   const handleRegister = async () => {
     try {
       const response = await AccountService.Register(formData);
-      // alert(response.message);
+      console.log(response);
+      
       if (response.status === 200) {
         setFormData({
           email: "",

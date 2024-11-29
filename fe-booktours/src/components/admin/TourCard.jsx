@@ -21,12 +21,19 @@ const TourCard = (props) => {
         </Link>
       </div>
       <div className="px-6 py-4 mb-auto">
-        <Link
-          to={`/admin/tour-update/${props.tour?.tourId}`}
-          className="font-medium line-clamp-2 text-lg inline-block hover:text-sky-600 transition duration-500 ease-in-out mb-2"
-        >
-          {props.tour?.tourName}
+        <Link to={`/admin/tour-update/${props.tour?.tourId}`}>
+          <p className="font-medium line-clamp-2 text-lg inline-block hover:text-sky-600 transition duration-500 ease-in-out mb-2">
+            {props.tour?.tourName}
+          </p>
         </Link>
+        <p className="text-sky-700 line-clamp-2 text-sm">
+          {
+            props.tour?.bookTours?.filter(
+              (bookTour) => bookTour.confirmed === false
+            ).length
+          }{" "}
+          lượt đặt chưa xác nhận
+        </p>
         <p className="text-gray-500 line-clamp-2 text-sm">
           {props.tour?.description}
         </p>

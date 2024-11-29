@@ -38,8 +38,15 @@ import DetailTicketFlight from "./pages/DetailTicketFlight";
 import PaymentFlightTicket from "./pages/PaymentFlightTicket";
 import FlightManager from "./pages/admin/FlightManager";
 import FlightUpdate from "./pages/admin/FlightUpdate";
-import FlightBookingManager from "./pages/FlightBookingManager";
 import FlightReport from "./pages/admin/FlightReport";
+import HotelPage from "./pages/HotelPage";
+import Hotels from "./pages/Hotels";
+import HotelUpdate from "./pages/admin/HotelUpdate";
+import BookHotelManager from "./pages/admin/BookHotelManager";
+import HotelManager from "./pages/admin/HotelManager";
+import PaymentBookHotel from "./pages/PaymentBookHotel";
+import BookHotelDetail from "./pages/BookHotelDetail";
+import FlightBookingManager from "./pages/admin/FlightBookingManager";
 
 function App() {
   const context = useContext(GlobalContext);
@@ -69,6 +76,10 @@ function App() {
           element={<DetailAirportTransfer />}
         />
         <Route path="/flights" element={<Flights />} />
+
+        {/* Chiến */}
+        <Route path="/hotel" element={<HotelPage />} />
+        <Route path="/hotels" element={<Hotels />} />
 
         {/* Phải xác nhận email mới xem được */}
         {!context.profile?.verifiedEmail && (
@@ -100,6 +111,15 @@ function App() {
               path="/ticket-flight-detail/:flightCode/:ticketId"
               element={<DetailTicketFlight />}
             />
+
+            <Route
+              path="/payment-book-hotel/:hotelCode/:bookingCode"
+              element={<PaymentBookHotel />}
+            />
+            <Route
+              path="/book-hotel-detail/:hotelCode/:bookingCode"
+              element={<BookHotelDetail />}
+            />
           </>
         )}
 
@@ -113,53 +133,108 @@ function App() {
       </Route>
 
       {/* Phải đăng nhập và có quyền admin mới xem được */}
-      {context.isAuthenticated && context.roles?.includes("ROLE_ADMIN") && (
+      {context.isAuthenticated && context.roles?.length > 1 && (
         <Route element={<DashboardLayout />}>
           <Route path="/admin/*" element={<NotFound />} />
           <Route path="/admin" element={<Dashboard />} />
-          {/* Tour */}
-          <Route path="/admin/tour-report" element={<TourReport />} />
-          <Route path="/admin/tour-management" element={<TourManagement />} />
-          <Route path="/admin/tour-update/:tourId" element={<TourUpdate />} />
-          <Route path="/admin/tour-booking/:tourId" element={<TourBooking />} />
+          {context.roles?.some((role) =>
+            ["ROLE_ADMIN", "ROLE_TOUR_MANAGER"].includes(role)
+          ) && (
+            <>
+              {/* Tour */}
+              <Route path="/admin/tour-report" element={<TourReport />} />
+              <Route
+                path="/admin/tour-management"
+                element={<TourManagement />}
+              />
+              <Route
+                path="/admin/tour-update/:tourId"
+                element={<TourUpdate />}
+              />
+              <Route
+                path="/admin/tour-booking/:tourId"
+                element={<TourBooking />}
+              />
+              {/* Discount */}
+              <Route
+                path="/admin/discount-management"
+                element={<DiscountManager />}
+              />
+              <Route
+                path="/admin/discount-create"
+                element={<DiscountCreate />}
+              />
+            </>
+          )}
           {/* User */}
-          <Route path="/admin/user-management" element={<UserManagement />} />
-          {/* Discount */}
-          <Route
-            path="/admin/discount-management"
-            element={<DiscountManager />}
-          />
-          <Route path="/admin/discount-create" element={<DiscountCreate />} />
-          {/* AirportTransfer */}
-          <Route
-            path="/admin/airport-transfer-management"
-            element={<AirportTransferManager />}
-          />
-          <Route
-            path="/admin/airport-transfer-edit/:airportTransferId"
-            element={<AirportTransferEdit />}
-          />
-          <Route
-            path="/admin/book-ride/:airportTransferId"
-            element={<BookRideManager />}
-          />
-          {/* Chuyến bay */}
-          <Route
-            path="/admin/flight-management"
-            element={<FlightManager />}
-          />
-          <Route
-            path="/admin/flight-update/:flightCode"
-            element={<FlightUpdate />}
-          />
-          <Route
-            path="/admin/flight-booking-management/:flightCode"
-            element={<FlightBookingManager />}
-          />
-          <Route
-            path="/admin/flight-report"
-            element={<FlightReport />}
-          />
+          {context.roles?.some((role) =>
+            ["ROLE_ADMIN", "ROLE_TOUR_MANAGER"].includes(role)
+          ) && (
+            <>
+              <Route
+                path="/admin/user-management"
+                element={<UserManagement />}
+              />
+            </>
+          )}
+          {context.roles?.some((role) =>
+            ["ROLE_ADMIN", "ROLE_AIRPORT_TRANSFER_MANAGER"].includes(role)
+          ) && (
+            <>
+              {/* AirportTransfer */}
+              <Route
+                path="/admin/airport-transfer-management"
+                element={<AirportTransferManager />}
+              />
+              <Route
+                path="/admin/airport-transfer-edit/:airportTransferId"
+                element={<AirportTransferEdit />}
+              />
+              <Route
+                path="/admin/book-ride/:airportTransferId"
+                element={<BookRideManager />}
+              />
+            </>
+          )}
+          {context.roles?.some((role) =>
+            ["ROLE_ADMIN", "ROLE_FLIGHT_MANAGER"].includes(role)
+          ) && (
+            <>
+              {/* Chuyến bay */}
+              <Route
+                path="/admin/flight-management"
+                element={<FlightManager />}
+              />
+              <Route
+                path="/admin/flight-update/:flightCode"
+                element={<FlightUpdate />}
+              />
+              <Route
+                path="/admin/flight-booking-management/:flightCode"
+                element={<FlightBookingManager />}
+              />
+              <Route path="/admin/flight-report" element={<FlightReport />} />
+            </>
+          )}
+          {context.roles?.some((role) =>
+            ["ROLE_ADMIN", "ROLE_HOTEL_MANAGER"].includes(role)
+          ) && (
+            <>
+              {/* Khách sạn */}
+              <Route
+                path="/admin/hotel-management"
+                element={<HotelManager />}
+              />
+              <Route
+                path="/admin/hotel-update/:hotelCode"
+                element={<HotelUpdate />}
+              />
+              <Route
+                path="/admin/hotel-booking/:hotelCode"
+                element={<BookHotelManager />}
+              />
+            </>
+          )}
         </Route>
       )}
 

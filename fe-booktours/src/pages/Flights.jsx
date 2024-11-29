@@ -106,9 +106,11 @@ const FLights = () => {
             }}
           />
         </div>
-        <div ref={divRef} className={`md:col-span-3`}>
+        <div className={`md:col-span-3`}>
           {selectedFlight !== -1 ? (
-            <DetailAndBooking flight={flights[selectedFlight]} />
+            <div ref={divRef} className="md:sticky md:top-10">
+              <DetailAndBooking flight={flights[selectedFlight]} />
+            </div>
           ) : (
             <div className="flex mx-auto h-56 sticky top-0">
               <div className="m-auto">

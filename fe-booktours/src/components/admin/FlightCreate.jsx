@@ -57,7 +57,7 @@ const FlightCreate = (props) => {
       // console.log(response);
       if (response.status === 200) {
         alert("Tạo chuyến bay thành công");
-        // navigate(`/admin/flight-update/${response.data}`);
+        navigate(`/admin/flight-update/${response.data}`);
       } else {
         alert(response.message);
       }

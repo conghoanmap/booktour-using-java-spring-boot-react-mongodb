@@ -142,6 +142,18 @@ const AirportTransferManager = () => {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {airportTransfer.airfield?.airfieldName}
+                                <p>
+                                  <span>
+                                    (
+                                    {
+                                      airportTransfer.bookRides?.filter(
+                                        (bookRide) =>
+                                          bookRide.confirmed === false
+                                      ).length
+                                    }{" "}
+                                    lượt đặt chưa xác nhận)
+                                  </span>
+                                </p>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {airportTransfer.vehicles?.length}

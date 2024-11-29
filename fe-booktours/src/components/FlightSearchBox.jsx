@@ -110,7 +110,7 @@ const FlightSearchBox = () => {
       </div>
       <div className="grid md:flex gap-3">
         <button
-          className="h-full w-full mt-auto mb-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+          className="ml-auto mt-auto mb-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
           onClick={handleSearch}
         >
           <SearchIcon className="-ml-1 mr-3 h-5 w-5" aria-hidden="true" />

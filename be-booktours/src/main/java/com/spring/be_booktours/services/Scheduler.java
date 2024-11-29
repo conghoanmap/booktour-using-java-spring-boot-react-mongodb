@@ -36,6 +36,8 @@ public class Scheduler {
         }
     }
 
+    // Lập lịch bay tự động vào 10 giờ sáng mỗi ngày
+    // @Scheduled(cron = "0 55 10 * * ?")
     // Lập lịch bay tự động vào 0 giờ thứ 2 và thứ 5 hàng tuần
     @Scheduled(cron = "0 0 0 ? * MON,THU")
     public void autoScheduleFlight() {

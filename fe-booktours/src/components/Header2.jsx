@@ -45,7 +45,7 @@ const navigation = [
     ],
   },
   { name: "Vé máy bay", href: "/flights?departure=SGN&destination=HAN" },
-  { name: "Khách sạn", href: "#" },
+  { name: "Khách sạn", href: "/hotel" },
   {
     name: "Xem thêm",
     href: "/contact",
@@ -144,7 +144,7 @@ const Header2 = () => {
   const context = useContext(GlobalContext);
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white shadow sticky top-0 z-10">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         <Popover className="flex justify-between h-16">
           <div className="flex px-2 lg:px-0">
@@ -362,7 +362,7 @@ const Header2 = () => {
                                 {item.name}
                               </Link>
                             ))}
-                            {context.roles?.includes("ROLE_ADMIN") && (
+                            {context.roles?.length > 1 && (
                               <Link
                                 to="/admin"
                                 className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
@@ -436,7 +436,7 @@ const Header2 = () => {
                         </Link>
                       </MenuItem>
                     ))}
-                    {context.roles?.includes("ROLE_ADMIN") && (
+                    {context.roles?.length > 1 && (
                       <MenuItem as="div">
                         <Link
                           to="/admin"

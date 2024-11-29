@@ -16,6 +16,7 @@ import ChangeInfomation from "../components/ChangeInfomation";
 import { FiHardDrive } from "react-icons/fi";
 import HistoryBookRide from "../components/HistoryBookRide";
 import HistoryTicketFlight from "../components/HistoryTicketFlight";
+import HistoryBookHotel from "../components/HistoryBookHotel";
 
 const navigations = [
   {
@@ -48,7 +49,7 @@ const navigations = [
     name: "Khách sạn",
     href: "#",
     icon: ViewGridAddIcon,
-    component: ChangePassword,
+    component: HistoryBookHotel,
   },
 ];
 

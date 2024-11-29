@@ -78,9 +78,7 @@ public class FlightController {
     @GetMapping("/ticket-info/{flightCode}/{ticketId}")
     @PreAuthorize("hasAnyAuthority('ROLE_CUSTOMER')")
     public ResponseEntity<?> getTicketInfo(@PathVariable String flightCode, @PathVariable String ticketId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        return ResponseEntity.ok(flightService.getTicketInfo(flightCode, ticketId, email));
+        return ResponseEntity.ok(flightService.getTicketInfo(flightCode, ticketId));
     }
 
     // Thanh toán

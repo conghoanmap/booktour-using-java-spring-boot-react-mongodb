@@ -24,13 +24,11 @@ export default class AccountService {
 
   static async SendVerifyCode() {
     try {
-      const response = await axios.get(
-        `${this.BASE_URL}/create-and-send`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axios.get(`${this.BASE_URL}/create-and-send`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -39,13 +37,11 @@ export default class AccountService {
 
   static async VerifyEmail() {
     try {
-      const response = await axios.get(
-        `${this.BASE_URL}/verify-email`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const response = await axios.get(`${this.BASE_URL}/verify-email`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -116,11 +112,14 @@ export default class AccountService {
 
   static async getAllUsers(page, limit) {
     try {
-      const response = await axios.get(`${this.ADMIN_URL}/get-all-users?page=${page}&limit=${limit}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        `${this.ADMIN_URL}/get-all-users?page=${page}&limit=${limit}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -144,6 +143,20 @@ export default class AccountService {
     }
   }
 
+  // Xóa user
+  static async deleteUser(email) {
+    try {
+      const response = await axios.delete(`${this.ADMIN_URL}/delete/${email}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Đăng xuất
   static Logout() {
     localStorage.removeItem("token");
@@ -159,11 +172,14 @@ export default class AccountService {
   // Đếm các user đã đăng ký trong n ngày gần nhất
   static async countUserRegisterInNDays(days) {
     try {
-      const response = await axios.get(`${this.ADMIN_URL}/count-customers?days=${days}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        `${this.ADMIN_URL}/count-customers?days=${days}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       throw error;

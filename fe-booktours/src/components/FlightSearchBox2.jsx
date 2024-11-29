@@ -14,8 +14,8 @@ const minMaxPrices = [
 const sorts = [
   { title: "Giá tăng dần", sortBy: "price", sortType: "asc" },
   { title: "Giá giảm dần", sortBy: "price", sortType: "desc" },
-  { title: "Thời gian bay tăng dần", sortBy: "duration", sortType: "asc" },
-  { title: "Thời gian bay giảm dần", sortBy: "duration", sortType: "desc" },
+  // { title: "Thời gian bay tăng dần", sortBy: "duration", sortType: "asc" },
+  // { title: "Thời gian bay giảm dần", sortBy: "duration", sortType: "desc" },
 ]; // 1 input(select)
 const FlightSearchBox2 = (props) => {
   const [minMaxPriceSelected, setMinMaxPriceSelected] = useState(0);

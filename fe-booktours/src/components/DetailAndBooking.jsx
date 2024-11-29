@@ -73,7 +73,7 @@ const DetailAndBooking = (props) => {
   };
 
   return (
-    <div className="md:sticky md:top-10 p-5 bg-white rounded-lg border border-solid shadow-sm">
+    <div className="p-5 bg-white rounded-lg border border-solid shadow-sm">
       <h1 className="text-2xl font-semibold text-sky-700">
         {props.flight?.flightName} - Mã chuyến bay({props.flight?.flightCode})
       </h1>

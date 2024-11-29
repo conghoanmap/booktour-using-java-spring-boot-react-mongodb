@@ -251,7 +251,7 @@ public class FlightService {
                 .findFirst();
         if (!ticketOptional.isPresent()) {
             response.setStatus(404);
-            response.setMessage("Không tìm thấy vé");
+            response.setMessage("Không tìm thấy vé hoặc vé đã bị hủy");
             return response;
         }
 
@@ -301,13 +301,25 @@ public class FlightService {
                 + ticket.getPassengers().stream().filter(p -> p.isVip() == true).toArray().length);
         ticket.setCanceled(true);
         flightRepository.save(flight);
+
+        // Xóa vé khỏi lịch sử đặt vé của người dùng
+        Optional<AppUser> user = appUserRepository.findByEmail(email);
+        if (user.isPresent()) {
+            user.get().getFlightBookings().removeIf(fb -> fb.getFlightCode().equals(flightCode)
+                    && fb.getTicketId().equals(ticketId));
+            appUserRepository.save(user.get());
+        } else {
+            response.setStatus(404);
+            response.setMessage("Không tìm thấy người dùng");
+            return response;
+        }
         response.setStatus(200);
         response.setMessage("Hủy vé thành công, số tiền hoàn lại: " + ticket.getTotalPrice() * 0.8);
         response.setData(ticket.getTotalPrice() * 0.8);
         return response;
     }
 
-    public MyResponse<DetailTicket> getTicketInfo(String flightCode, String ticketId, String email) {
+    public MyResponse<DetailTicket> getTicketInfo(String flightCode, String ticketId) {
         MyResponse<DetailTicket> response = new MyResponse<>();
         Optional<Flight> flightOptional = flightRepository.findByFlightCode(flightCode);
         if (!flightOptional.isPresent()) {
@@ -324,11 +336,6 @@ public class FlightService {
             return response;
         }
         Ticket ticket = ticketOptional.get();
-        if (!ticket.getContactInfo().getEmail().equals(email)) {
-            response.setStatus(403);
-            response.setMessage("Không thể xem vé của người khác");
-            return response;
-        }
         // Tìm thông tin lịch bay
         Schedule schedule = flight.getSchedules().stream().filter(s -> s.getScheduleId().equals(ticket.getScheduleId()))
                 .findFirst().get();

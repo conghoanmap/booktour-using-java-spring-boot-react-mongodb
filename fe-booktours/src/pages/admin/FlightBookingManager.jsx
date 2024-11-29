@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import FlightService from "../services/FlightService";
 import { SaveIcon, TableIcon } from "@heroicons/react/outline";
-import formatDateYYYYMMDD from "../utils/format-date-yyyymmdd";
-import formatPrice from "../utils/format-price";
+import formatPrice from "../../utils/format-price";
 import { CSVLink } from "react-csv";
+import FlightService from "../../services/FlightService";
+import formatDateYYYYMMDD from "../../utils/format-date-yyyymmdd";
 
 const FlightBookingManager = () => {
   const { flightCode } = useParams();

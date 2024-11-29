@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.spring.be_booktours.entities.flight_entities.FlightBooking;
+import com.spring.be_booktours.entities.hotel_entities.HotelBookingHistory;
 import com.spring.be_booktours.entities.sub_entities.BookRideHistory;
 import com.spring.be_booktours.entities.sub_entities.BookingHistory;
 
@@ -41,6 +42,7 @@ public class AppUser implements UserDetails {
     private Set<BookingHistory> bookingHistories = new HashSet<>(); // Lịch sử đặt tour
     private Set<BookRideHistory> bookRideHistories = new HashSet<>(); // Lịch sử đặt chuyến đưa đón sân bay
     private Set<FlightBooking> flightBookings = new HashSet<>(); // Lịch sử đặt vé máy bay
+    private Set<HotelBookingHistory> hotelBookingHistories = new HashSet<>(); // Lịch sử đặt phòng khách sạn
     // private String address;
     // private double accountBalance; // Số dư ví
     // ...

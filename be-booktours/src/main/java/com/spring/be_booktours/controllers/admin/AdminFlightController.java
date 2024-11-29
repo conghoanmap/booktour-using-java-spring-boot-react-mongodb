@@ -18,7 +18,7 @@ import com.spring.be_booktours.services.FlightService;
 
 @RestController
 @RequestMapping("/api/v1/admin/flight")
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_FLIGHT_MANAGER')")
 public class AdminFlightController {
 
     @Autowired

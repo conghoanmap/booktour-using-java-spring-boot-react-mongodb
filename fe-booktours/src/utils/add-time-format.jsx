@@ -19,3 +19,4 @@ const addTimeFormat = (timeString, hoursToAdd, minutesToAdd) => {
 };
 
 export default addTimeFormat;
+
