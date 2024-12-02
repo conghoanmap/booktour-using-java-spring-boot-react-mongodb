@@ -37,7 +37,7 @@ const AirportTransferSearchBox = () => {
         1,
         1
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         const state = {
           ...search,

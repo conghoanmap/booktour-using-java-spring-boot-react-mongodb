@@ -48,7 +48,7 @@ const FLights = () => {
     const fetchFlights = async () => {
       try {
         const response = await FlightService.getFlights(searchData);
-        console.log(response.data);
+        // console.log(response.data);
         setFlights(response.data);
         setSelectedFlight(-1);
       } catch (error) {

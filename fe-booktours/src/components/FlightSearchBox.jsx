@@ -13,15 +13,15 @@ const FlightSearchBox = () => {
   });
 
   useEffect(() => {
-    console.log(searchData);
+    // console.log(searchData);
   }, [searchData]);
 
   const handleSearch = () => {
-    console.log({
-      departure: airFields[searchData.departure].airfieldId,
-      destination: airFields[searchData.destination].airfieldId,
-      departureDate: searchData.departureDate,
-    });
+    // console.log({
+    //   departure: airFields[searchData.departure].airfieldId,
+    //   destination: airFields[searchData.destination].airfieldId,
+    //   departureDate: searchData.departureDate,
+    // });
     navigate(
       `/flights?departure=${
         airFields[searchData.departure].airfieldId

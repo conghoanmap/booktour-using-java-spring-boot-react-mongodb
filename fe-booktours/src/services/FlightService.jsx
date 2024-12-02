@@ -7,7 +7,7 @@ export default class FlightService {
   // Xem các chuyến bay
   static async getFlights(flightQuery) {
     let url = `${this.BASE_URL}?departure=${flightQuery?.departure}&destination=${flightQuery?.destination}&airline=${flightQuery?.airline}&departureDate=${flightQuery?.departureDate}&minPrice=${flightQuery?.minPrice}&maxPrice=${flightQuery?.maxPrice}&cancelable=${flightQuery?.cancelable}&active=${flightQuery?.active}&sortBy=${flightQuery?.sortBy}&sortType=${flightQuery?.sortType}&page=${flightQuery?.page}&limit=${flightQuery?.limit}`;
-  console.log(url);
+  // console.log(url);
       
     try {
       const response = await axios.get(url);

@@ -242,6 +242,14 @@ const TourReport = () => {
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
                   value={daysSelected}
                   onChange={(e) => setDaysSelected(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "e" || e.key === "E") {
+                      e.preventDefault();
+                    }
+                  }}
+                  onInput={(e) => {
+                    e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                  }}
                 />
                 <span className="mx-auto mt-1">
                   (Chỉ định ngày để xem doanh thu)

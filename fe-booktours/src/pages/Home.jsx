@@ -391,7 +391,7 @@ const Home = () => {
               Các chuyến bay phổ biến
             </h1>
             <Link
-              to="/flight?departure=HAN&destination=SGN"
+              to="/flights?departure=HAN&destination=SGN"
               className="ml-auto my-auto inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
             >
               Xem tất cả

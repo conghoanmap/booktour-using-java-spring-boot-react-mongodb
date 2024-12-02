@@ -16,7 +16,7 @@ const BookHotelManager = () => {
     const fetchHotelBookings = async () => {
       try {
         const response = await HotelService.getBookingByDate(hotelCode, date);
-        console.log(response.data);
+        // console.log(response.data);
         setHotelBookings(response.data);
       } catch (error) {
         console.error(error);

@@ -12,7 +12,7 @@ const DetailAndBooking = (props) => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
-  console.log(props.flight?.schedules);
+  // console.log(props.flight?.schedules);
 
   useEffect(() => {
     setBookingData({
@@ -53,6 +53,7 @@ const DetailAndBooking = (props) => {
       navigate("/login");
     }
     try {
+      
       const response = await FlightService.bookTicket(
         props.flight?.flightCode,
         bookingData
@@ -217,23 +218,23 @@ const DetailAndBooking = (props) => {
                   <input
                     type="checkbox"
                     className="focus:ring-sky-500 h-4 w-4 text-sky-600 border-gray-300 rounded"
-                    checked={bookingData.flightServiceIds.includes(
-                      service.serviceId
-                    )}
+                    checked={bookingData.flightServiceIds
+                      .map((id) => id)
+                      .includes(service.flightServiceId)}
                     onChange={(e) => {
                       if (e.target.checked) {
                         setBookingData({
                           ...bookingData,
                           flightServiceIds: [
                             ...bookingData.flightServiceIds,
-                            service.serviceId,
+                            service.flightServiceId,
                           ],
                         });
                       } else {
                         setBookingData({
                           ...bookingData,
                           flightServiceIds: bookingData.flightServiceIds.filter(
-                            (id) => id !== service.serviceId
+                            (id) => id !== service.flightServiceId,
                           ),
                         });
                       }
@@ -352,9 +353,10 @@ const DetailAndBooking = (props) => {
             ).length < 1
           }
         >
-          Đặt vé{props.flight?.schedules.filter(
-              (schedule) => schedule.departureDate >= new Date().toISOString()
-            ) && "(Hiện chưa có lịch bay)"}
+          Đặt vé
+          {props.flight?.schedules.filter(
+            (schedule) => schedule.departureDate >= new Date().toISOString()
+          ).length < 1 && "(Hiện chưa có lịch bay)"}
         </button>
       </div>
     </div>

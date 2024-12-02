@@ -42,11 +42,11 @@ const FlightCreate = (props) => {
   // };
 
   const handleCreate = async () => {
-    console.log({
-      departure: airFields[defaultFlight.departure],
-      destination: airFields[defaultFlight.destination],
-      airline: airLines[defaultFlight.airline],
-    });
+    // console.log({
+    //   departure: airFields[defaultFlight.departure],
+    //   destination: airFields[defaultFlight.destination],
+    //   airline: airLines[defaultFlight.airline],
+    // });
 
     try {
       const response = await FlightService.createDefaultFlight({

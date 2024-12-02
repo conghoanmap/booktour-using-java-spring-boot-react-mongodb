@@ -71,6 +71,7 @@ const HotelUpdate = () => {
           index === roomTypeSelected ? roomType : item
         ),
       });
+      setOpen2(false);
     }
   }
 
@@ -179,6 +180,14 @@ const HotelUpdate = () => {
                                   hotelStar: e.target.value,
                                 })
                               }
+                              onKeyDown={(e) => {
+                                if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                              }}
                             />
                           </div>
                         </div>

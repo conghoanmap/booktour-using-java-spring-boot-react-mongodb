@@ -26,6 +26,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../contexts/GlobalProvider";
 import useLogout from "../../hooks/use-logout";
 import DataService from "../../services/DataService";
+import { BiArrowBack } from "react-icons/bi";
 
 const navigation = [
   {
@@ -45,7 +46,7 @@ const navigation = [
     name: "Tour du lịch",
     href: "/admin/tour-management",
     icon: LocationMarkerIcon,
-    // children: [{ name: "Báo cáo", href: "/admin/tour-report" }],
+    children: [{ name: "Báo cáo", href: "/admin/tour-report" }],
     roles: ["ROLE_ADMIN", "ROLE_TOUR_MANAGER"],
   },
   {
@@ -202,8 +203,9 @@ const Siderbar = ({ children }) => {
                             : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                         } group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
                           // Có quyền truy cập
-                          !item.roles.includes(context.profile?.role) &&
-                          "hidden"
+                      !context.profile?.roles?.some((role) =>
+                        item.roles.includes(role)
+                      ) && "hidden"
                         }`}
                       >
                         <item.icon
@@ -248,26 +250,40 @@ const Siderbar = ({ children }) => {
                       )}
                     </React.Fragment>
                   ))}
-                  <p
+                  {context.profile?.roles?.includes("ROLE_ADMIN") && (
+                    <>
+                      <p
+                        className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        onClick={() => handleBackup("")}
+                      >
+                        <DatabaseIcon
+                          className="text-teal-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-teal-600"
+                          aria-hidden="true"
+                        />
+                        Sao lưu dữ liệu
+                      </p>
+                      <p
+                        className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                        onClick={() => handleRestore("")}
+                      >
+                        <DatabaseIcon
+                          className="text-rose-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-rose-600"
+                          aria-hidden="true"
+                        />
+                        Phục hồi dữ liệu
+                      </p>
+                    </>
+                  )}
+                  <Link
+                    to="/"
                     className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    onClick={handleBackup}
                   >
-                    <DatabaseIcon
-                      className="text-teal-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-teal-600"
+                    <BiArrowBack
+                      className="text-gray-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-gray-600"
                       aria-hidden="true"
                     />
-                    Sao lưu dữ liệu
-                  </p>
-                  <p
-                    className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    onClick={handleRestore}
-                  >
-                    <DatabaseIcon
-                      className="text-rose-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-rose-600"
-                      aria-hidden="true"
-                    />
-                    Phục hồi dữ liệu
-                  </p>
+                    Về trang chủ
+                  </Link>
                 </nav>
               </div>
               <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
@@ -400,6 +416,16 @@ const Siderbar = ({ children }) => {
                   </p>
                 </>
               )}
+              <Link
+                to="/"
+                className="cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              >
+                <BiArrowBack
+                  className="text-gray-500 mr-3 flex-shrink-0 h-6 w-6 group-hover:text-gray-600"
+                  aria-hidden="true"
+                />
+                Về trang chủ
+              </Link>
             </nav>
           </div>
           <div className="flex-shrink-0 flex border-t border-gray-200 p-4">

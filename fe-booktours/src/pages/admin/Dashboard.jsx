@@ -33,28 +33,28 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response = await TourService.getRevenue(7);
-        console.log(response);
+        // console.log(response);
         setTotalRevenue(response.data);
       } catch (error) {
         console.error(error);
       }
       try {
         const response = await TourService.getTotalBooked(7);
-        console.log(response);
+        // console.log(response);
         setTotalBooked(response.data);
       } catch (error) {
         console.error(error);
       }
       try {
         const response = await AccountService.countUserRegisterInNDays(7);
-        console.log(response);
+        // console.log(response);
         setCountUserCreate(response.data);
       } catch (error) {
         console.error(error);
       }
       try {
         const response = await TourService.getTop10BookedTours();
-        console.log(response);
+        // console.log(response);
         setMostBookedTours(response.data);
       } catch (error) {
         console.error(error);

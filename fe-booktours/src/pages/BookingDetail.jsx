@@ -16,7 +16,7 @@ const BookingDetail = () => {
     const fetchBookTour = async () => {
       try {
         const response = await TourService.getBookTour(tourId, bookingCode);
-        console.log(response);
+        // console.log(response);
         if (response.status === 200) {
           setBookTour(response.data);
         }

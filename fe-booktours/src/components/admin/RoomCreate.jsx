@@ -31,7 +31,7 @@ const RoomCreate = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(roomType);
+    // console.log(roomType);
   }, [roomType]);
 
   const handleAddRoomType = async () => {
@@ -40,7 +40,7 @@ const RoomCreate = (props) => {
         props.hotelCode,
         roomType
       );
-      console.log(response.data);
+      // console.log(response.data);
       if (response.status === 200) {
         props.handleAdd(response.data);
         setRoomType({
@@ -160,6 +160,14 @@ const RoomCreate = (props) => {
                                   roomCapacity: e.target.value,
                                 });
                               }}
+                              onKeyDown={(e) => {
+                                if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                              }}
                             />
                           </div>
                         </div>
@@ -181,6 +189,14 @@ const RoomCreate = (props) => {
                                   ...roomType,
                                   roomArea: e.target.value,
                                 });
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(/[^0-9.]/g, "");
                               }}
                             />
                           </div>
@@ -204,6 +220,14 @@ const RoomCreate = (props) => {
                                   roomPrice: e.target.value,
                                 });
                               }}
+                              onKeyDown={(e) => {
+                                if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                              }}
                             />
                           </div>
                         </div>
@@ -225,6 +249,14 @@ const RoomCreate = (props) => {
                                   ...roomType,
                                   numberOfRooms: e.target.value,
                                 });
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(/[^0-9.]/g, "");
                               }}
                             />
                           </div>

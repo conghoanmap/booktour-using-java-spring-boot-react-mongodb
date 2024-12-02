@@ -32,13 +32,13 @@ const BookRideManager = () => {
   }, []);
 
   const handleChange = async () => {
-    console.log(airportTransfer);
+    // console.log(airportTransfer);
 
     try {
       const response = await AirportTransferService.updateAirportTransfer(
         airportTransfer
       );
-      console.log(response);
+      // console.log(response);
       if (response?.status === 200) {
         alert("Cập nhật thành công");
         setIsChanged(false);

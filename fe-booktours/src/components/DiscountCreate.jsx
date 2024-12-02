@@ -30,7 +30,7 @@ const DiscountCreate = () => {
         ...discount,
         minPeople: 4,
       });
-      console.log(response.data);
+      // console.log(response.data);
       if(response.status === 200) {
         navigate("/admin/discount-management");
       }
@@ -175,6 +175,14 @@ const DiscountCreate = () => {
                               duration: e.target.value,
                             })
                           }
+                          onKeyDown={(e) => {
+                            if (e.key === "-" || e.key === "e" || e.key === "E") {
+                              e.preventDefault();
+                            }
+                          }}
+                          onInput={(e) => {
+                            e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                          }}
                         />
                         <span className="text-sm text-red-500">{discountError.duration}</span>
                       </div>
@@ -199,6 +207,14 @@ const DiscountCreate = () => {
                                 percentDiscount: e.target.value,
                               });
                             }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "-" || e.key === "e" || e.key === "E") {
+                              e.preventDefault();
+                            }
+                          }}
+                          onInput={(e) => {
+                            e.target.value = e.target.value.replace(/[^0-9.]/g, "");
                           }}
                         />
                         <span className="text-sm text-red-500">{discountError.percentDiscount}</span>

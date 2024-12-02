@@ -22,7 +22,7 @@ const AirportTransferManager = () => {
     const fetchAirportTransfers = async () => {
       try {
         const response = await AirportTransferService.getAirportTransfers();
-        console.log(response);
+        // console.log(response);
         const filteredAirportTransfers = response.data?.filter(
           (airportTransfer) => {
             return airportTransfer.airfield?.airfieldName
@@ -142,7 +142,11 @@ const AirportTransferManager = () => {
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {airportTransfer.airfield?.airfieldName}
-                                <p>
+                                {airportTransfer.bookRides?.filter(
+                                        (bookRide) =>
+                                          bookRide.confirmed === false
+                                      ).length > 0 && (
+                                <p className="text-red-500 text-sm">
                                   <span>
                                     (
                                     {
@@ -154,6 +158,7 @@ const AirportTransferManager = () => {
                                     lượt đặt chưa xác nhận)
                                   </span>
                                 </p>
+                              )}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {airportTransfer.vehicles?.length}

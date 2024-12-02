@@ -12,7 +12,7 @@ const DetailTicketFlight = () => {
     const fetchTicket = async () => {
       try {
         const response = await FlightService.getTicket(flightCode, ticketId);
-        console.log(response.data);
+        // console.log(response.data);
 
         setTicket(response.data);
       } catch (error) {

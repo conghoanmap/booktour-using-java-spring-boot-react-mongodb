@@ -69,7 +69,7 @@ const FlightUpdate = () => {
   const handleAddSchedule = async () => {
     try {
       const response = await FlightService.addSchedule(flightCode, newSchedule);
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         alert("Thêm lịch trình thành công");
         const newSchedule = response.data;
@@ -205,10 +205,25 @@ const FlightUpdate = () => {
                             value={flight?.normalPrice}
                             min={300000}
                             step={17000}
+                            onKeyDown={(e) => {
+                              if (
+                                e.key === "-" ||
+                                e.key === "e" ||
+                                e.key === "E"
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(
+                                /[^0-9.]/g,
+                                ""
+                              );
+                            }}
                             onChange={(e) =>
                               setFlight({
                                 ...flight,
-                                normalPrice: e.target.value,
+                                normalPrice: parseInt(e.target.value),
                               })
                             }
                           />
@@ -228,6 +243,21 @@ const FlightUpdate = () => {
                             value={flight?.vipPrice}
                             min={300000}
                             step={17000}
+                            onKeyDown={(e) => {
+                              if (
+                                e.key === "-" ||
+                                e.key === "e" ||
+                                e.key === "E"
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(
+                                /[^0-9.]/g,
+                                ""
+                              );
+                            }}
                             onChange={(e) =>
                               setFlight({ ...flight, vipPrice: e.target.value })
                             }
@@ -251,6 +281,14 @@ const FlightUpdate = () => {
                             onChange={(e) =>
                               setFlight({ ...flight, tax: e.target.value })
                             }
+                            onKeyDown={(e) => {
+                              if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                            }}
                           />
                         </div>
                       </div>
@@ -405,6 +443,14 @@ const FlightUpdate = () => {
                                 flightServicePrice: e.target.value,
                               })
                             }
+                            onKeyDown={(e) => {
+                              if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                            }}
                           />
                         </div>
                       </div>
@@ -525,6 +571,14 @@ const FlightUpdate = () => {
                                 durationHour: e.target.value,
                               })
                             }
+                            onKeyDown={(e) => {
+                              if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                            }}
                           />
                         </div>
                       </div>
@@ -547,6 +601,14 @@ const FlightUpdate = () => {
                                 durationMinute: e.target.value,
                               })
                             }
+                            onKeyDown={(e) => {
+                              if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                            }}
                           />
                         </div>
                       </div>

@@ -17,7 +17,7 @@ const BookHotelDetail = () => {
           hotelCode,
           bookingCode
         );
-        console.log(response.data);
+        // console.log(response.data);
 
         setBooking(response.data);
       } catch (error) {

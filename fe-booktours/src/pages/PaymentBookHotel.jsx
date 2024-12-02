@@ -28,7 +28,7 @@ const PaymentBookHotel = () => {
           format: "text",
           template: "compact",
         });
-        console.log("QR code: ", response);
+        // console.log("QR code: ", response);
         setQrCode(
           response.data?.qrDataURL.replace("data:image/png;base64,", "")
         );
@@ -44,7 +44,7 @@ const PaymentBookHotel = () => {
           hotelCode,
           bookingCode
         );
-        console.log(response.data);
+        // console.log(response.data);
         if (response.status === 200) {
           const totalPrice = response.data?.totalPrice;
           setTotalPrice(totalPrice);

@@ -12,7 +12,7 @@ const HotelSearchBox = () => {
     locationId: "",
   });
   const handleSearch = () => {
-    console.log(searchData);
+    // console.log(searchData);
     if (searchData.searchByHotelName) {
       if (searchData.hotelName?.length < 1) {
         alert("Vui lòng nhập tên khách sạn");

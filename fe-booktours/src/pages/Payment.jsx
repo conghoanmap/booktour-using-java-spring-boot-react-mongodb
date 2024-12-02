@@ -28,7 +28,7 @@ const Payment = () => {
           format: "text",
           template: "compact",
         });
-        console.log("QR code: ", response);
+        // console.log("QR code: ", response);
         setQrCode(
           response.data?.qrDataURL.replace("data:image/png;base64,", "")
         );
@@ -41,7 +41,7 @@ const Payment = () => {
     const fetchBooking = async () => {
       try {
         const response = await TourService.getBookTour(tourId, bookingCode);
-        console.log(response.data);
+        // console.log(response.data);
         if (response.status === 200) {
           const totalPrice = response.data?.totalPrice;
           setTotalPrice(totalPrice);

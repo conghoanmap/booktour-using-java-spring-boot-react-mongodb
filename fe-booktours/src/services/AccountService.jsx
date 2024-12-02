@@ -57,8 +57,8 @@ export default class AccountService {
       });
       return response.data;
     } catch (error) {
-      // throw error;
-      console.log("Bạn chưa đăng nhập");
+      throw error;
+      // console.log("Bạn chưa đăng nhập");
     }
   }
 
@@ -72,7 +72,7 @@ export default class AccountService {
       return response.data;
     } catch (error) {
       // throw error;
-      console.log("Không thể xác định vai trò của bạn");
+      // console.log("Không thể xác định vai trò của bạn");
     }
   }
 
@@ -167,6 +167,18 @@ export default class AccountService {
     const token = localStorage.getItem("token");
     // console.log('token', token);
     return token !== null;
+  }
+
+  // Cấp lại mật khẩu
+  static async resetPassword(email) {
+    try {
+      const response = await axios.get(
+        `${this.BASE_URL}/reset-password/${email}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 
   // Đếm các user đã đăng ký trong n ngày gần nhất

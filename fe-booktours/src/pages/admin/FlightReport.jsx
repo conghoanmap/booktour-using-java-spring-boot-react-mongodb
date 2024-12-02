@@ -25,32 +25,32 @@ const FlightReport = () => {
       try {
         // revenueOfAirline
         const response = await FlightService.getRevenueByAirline();
-        console.log(response.data);
+        // console.log(response.data);
         setRevenueOfAirline(response.data);
 
         // top5FlightMostBooked
         const response2 = await FlightService.getTop5Flight();
-        console.log(response2.data);
+        // console.log(response2.data);
         setTop5FlightMostBooked(response2.data);
 
         // percentCanceledFlight
         const response3 = await FlightService.getCancelTicketRate();
-        console.log(response3.data);
+        // console.log(response3.data);
         setPercentCanceledFlight(response3.data);
 
         // revenueByDays
         const response4 = await FlightService.getRevenueInRecentDays(7);
-        console.log(response4.data);
+        // console.log(response4.data);
         setRevenueByDays(response4.data);
 
         // countBookedTicketByDays
         const response5 = await FlightService.getTicketInRecentDays(7);
-        console.log(response5.data);
+        // console.log(response5.data);
         setCountBookedTicketByDays(response5.data);
 
         // mostUserBookedTicket
         const response6 = await FlightService.getTopCustomerInRecentDays(7);
-        console.log(response6.data);
+        // console.log(response6.data);
         setMostUserBookedTicket(response6.data);
       } catch (error) {
         console.error(error);

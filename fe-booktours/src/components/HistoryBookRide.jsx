@@ -10,10 +10,10 @@ const HistoryBookRide = () => {
     <div className="divide-y divide-gray-200 lg:col-span-9">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Lịch sử đặt tour
+          Lịch sử đặt chuyến xe đưa đón
         </h3>
         <p className="mt-1 max-w-2xl text-sm text-gray-500">
-          Thông tin các bookTour của bạn
+          Thông tin các chuyến xe đưa đón đã được bạn đặt
         </p>
       </div>
       <div className="px-4 py-5 sm:px-6 flex flex-col">

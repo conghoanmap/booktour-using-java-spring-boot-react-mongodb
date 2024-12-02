@@ -43,11 +43,11 @@ const HotelCreate = (props) => {
   // };
 
   const handleCreate = async () => {
-    console.log({
-      hotelName: defaultHotel.hotelName,
-      hotelStar: defaultHotel.hotelStar,
-      location: locations[defaultHotel.locationIndex],
-    });
+    // console.log({
+    //   hotelName: defaultHotel.hotelName,
+    //   hotelStar: defaultHotel.hotelStar,
+    //   location: locations[defaultHotel.locationIndex],
+    // });
 
     if (defaultHotel.hotelName === "") {
       alert("Tên khách sạn không được để trống");
@@ -120,7 +120,7 @@ const HotelCreate = (props) => {
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    Tạo chuyến bay mặc định
+                    Tạo khách sạn mặc định
                   </DialogTitle>
                   <div className="mt-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -165,6 +165,14 @@ const HotelCreate = (props) => {
                                 ...defaultHotel,
                                 hotelStar: e.target.value,
                               });
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(/[^0-9.]/g, "");
                             }}
                           />
                         </div>

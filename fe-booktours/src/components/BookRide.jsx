@@ -22,7 +22,7 @@ const BookRide = (props) => {
     note: "",
   });
   const [bookRideError, setBookRideError] = useState({});
-  console.log(bookRide);
+  // console.log(bookRide);
 
   useEffect(() => {
     // Mỗi lần time thay đổi thì kiểm tra ngày đang chọn có phải ngày hiện tại không, nếu là ngày hiện tại thì thời gian phải lớn hơn thời gian hiện tại
@@ -59,7 +59,7 @@ const BookRide = (props) => {
         props.airportTransferId,
         bookingRide
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         alert("Đặt xe thành công");
         props.setOpen(false);
@@ -257,6 +257,14 @@ const BookRide = (props) => {
                               quantityVehicle: e.target.value,
                             })
                           }
+                          onKeyDown={(e) => {
+                            if (e.key === "-" || e.key === "e" || e.key === "E") {
+                              e.preventDefault();
+                            }
+                          }}
+                          onInput={(e) => {
+                            e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                          }}
                         />
                       </div>
                     </div>

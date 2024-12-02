@@ -61,9 +61,7 @@ public class HotelController {
             @Valid @RequestBody BookRoomHotelDto defaultHotel) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        if (defaultHotel.getContactInfo().getEmail().length() < 1) {
-            defaultHotel.getContactInfo().setEmail(email);
-        }
+        defaultHotel.getContactInfo().setEmail(email);
         return ResponseEntity.ok(hotelService.bookRoom(email, hotelCode, defaultHotel));
     }
 

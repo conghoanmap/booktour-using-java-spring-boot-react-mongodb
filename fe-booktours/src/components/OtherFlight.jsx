@@ -24,7 +24,7 @@ const OtherFlight = () => {
           page: 1,
           limit: 5,
         });
-        console.log(response.data);
+        // console.log(response.data);
         setFlights(response.data);
         setSelectedFlight(-1);
       } catch (error) {

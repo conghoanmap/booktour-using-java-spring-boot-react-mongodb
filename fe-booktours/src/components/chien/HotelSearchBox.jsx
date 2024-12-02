@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { LocationData } from "../../statics/datas/LocationData";
 
 const minMaxPrices = [
-  { title: "Mọi tầm giá", minPrice: 0, maxPrice: 999999999 },
+  { title: "Mọi tầm giá", minPrice: 0, maxPrice: -1 },
   { title: "Dưới 200 nghìn", minPrice: 0, maxPrice: 200000 },
   { title: "200 nghìn - 350 nghìn", minPrice: 200000, maxPrice: 350000 },
   { title: "350 nghìn - 500 nghìn", minPrice: 350000, maxPrice: 500000 },

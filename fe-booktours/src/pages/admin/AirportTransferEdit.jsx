@@ -23,7 +23,7 @@ const AirportTransferEdit = () => {
           0,
           0
         );
-        console.log(response.data);
+        // console.log(response.data);
         setAirportTransfer(response.data);
       } catch (error) {
         console.error("fetchAirportTransfer -> error", error);
@@ -46,7 +46,7 @@ const AirportTransferEdit = () => {
       const response = await AirportTransferService.updateAirportTransfer(
         airportTransfer
       );
-      console.log(response);
+      // console.log(response);
       if (response?.status === 200) {
         alert("Cập nhật thành công");
       } else {
@@ -298,6 +298,14 @@ const AirportTransferEdit = () => {
                                                       : v
                                                 ),
                                             });
+                                          }}
+                                          onKeyDown={(e) => {
+                                            if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                              e.preventDefault();
+                                            }
+                                          }}
+                                          onInput={(e) => {
+                                            e.target.value = e.target.value.replace(/[^0-9.]/g, "");
                                           }}
                                         />
                                       </td>

@@ -13,7 +13,7 @@ const HotelManager = () => {
     hotelName: "",
     locationId: "",
     minPrice: 0,
-    maxPrice: 999999,
+    maxPrice: -1,
     active: 0,
     sortBy: "hotelName",
     sortType: "asc",
@@ -159,7 +159,8 @@ const HotelManager = () => {
                                   <div class="w-48 overflow-hidden text-ellipsis whitespace-nowrap">
                                     {hotel.hotelName}
                                   </div>
-                                  <p>
+                                  {hotel.bookingRoomHotels?.length > 0 && (
+                                  <p className="text-red-500 text-sm">
                                     (
                                     {
                                       hotel.bookingRoomHotels?.filter(
@@ -168,6 +169,7 @@ const HotelManager = () => {
                                     }{" "}
                                     lượt đặt chưa xác nhận)
                                   </p>
+                                )}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                   {hotel.hotelStar}

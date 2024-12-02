@@ -151,6 +151,14 @@ const DiscountManager = () => {
                                       setDiscounts(newDiscounts);
                                     }
                                   }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                      e.preventDefault();
+                                    }
+                                  }}
+                                  onInput={(e) => {
+                                    e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                                  }}
                                 />
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -186,6 +194,14 @@ const DiscountManager = () => {
                                         e.target.value;
                                       setDiscounts(newDiscounts);
                                     }
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "-" || e.key === "e" || e.key === "E") {
+                                      e.preventDefault();
+                                    }
+                                  }}
+                                  onInput={(e) => {
+                                    e.target.value = e.target.value.replace(/[^0-9.]/g, "");
                                   }}
                                 />
                               </td>

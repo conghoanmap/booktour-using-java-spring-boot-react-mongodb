@@ -46,7 +46,7 @@ const UserManagement = () => {
         // console.log(response);
         if (response.status === 200) {
           setUsers(response.data);
-          console.log(response.data?.length);
+          // console.log(response.data?.length);
 
           setRoles(response.data[0].roles);
         }
@@ -62,14 +62,14 @@ const UserManagement = () => {
   }, [selectUser]);
 
   const handleGrantRevoke = async () => {
-    console.log(roles);
+    // console.log(roles);
 
     try {
       const response = await AccountService.grantRevokeRole(
         users[selectUser].email,
         roles
       );
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         setOpen(false);
       }

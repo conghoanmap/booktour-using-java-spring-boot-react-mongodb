@@ -27,7 +27,7 @@ const PaymentBookRide = () => {
           format: "text",
           template: "compact",
         });
-        console.log("QR code: ", response);
+        // console.log("QR code: ", response);
         setQrCode(
           response.data?.qrDataURL.replace("data:image/png;base64,", "")
         );
@@ -43,7 +43,7 @@ const PaymentBookRide = () => {
           airportTransferId,
           bookRideId
         );
-        console.log(response.data);
+        // console.log(response.data);
         if (response.status === 200) {
           const totalCost = response.data?.totalCost;
           setTotalPrice(totalCost);

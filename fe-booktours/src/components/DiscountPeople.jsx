@@ -56,6 +56,14 @@ const DiscountPeople = (props) => {
                 });
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key === "-" || e.key === "e" || e.key === "E") {
+                e.preventDefault();
+              }
+            }}
+            onInput={(e) => {
+              e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+            }}
           />
         </div>
       </div>
@@ -81,6 +89,14 @@ const DiscountPeople = (props) => {
                   },
                 });
               }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "-" || e.key === "e" || e.key === "E") {
+                e.preventDefault();
+              }
+            }}
+            onInput={(e) => {
+              e.target.value = e.target.value.replace(/[^0-9.]/g, "");
             }}
           />
         </div>

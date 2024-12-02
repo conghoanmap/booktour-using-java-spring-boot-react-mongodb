@@ -76,7 +76,7 @@ const TourDetail = (props) => {
 
     try {
       const response = await TourService.reviewTour(tourId, review);
-      console.log(response);
+      // console.log(response);
       // Thêm review vào tour
       if (response.status === 200) {
         setTour({
@@ -816,6 +816,14 @@ const TourDetail = (props) => {
                           adultNumber: e.target.value > 1 ? e.target.value : 1,
                         })
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e" || e.key === "E") {
+                          e.preventDefault();
+                        }
+                      }}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                      }}
                     />
                   </div>
                 </div>
@@ -838,6 +846,14 @@ const TourDetail = (props) => {
                             e.target.value > 0 ? e.target.value : 0,
                         })
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e" || e.key === "E") {
+                          e.preventDefault();
+                        }
+                      }}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                      }}
                     />
                   </div>
                 </div>
@@ -860,6 +876,14 @@ const TourDetail = (props) => {
                             e.target.value > 0 ? e.target.value : 0,
                         })
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e" || e.key === "E") {
+                          e.preventDefault();
+                        }
+                      }}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                      }}
                     />
                   </div>
                 </div>
@@ -881,6 +905,14 @@ const TourDetail = (props) => {
                           babyNumber: e.target.value > 0 ? e.target.value : 0,
                         })
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "-" || e.key === "e" || e.key === "E") {
+                          e.preventDefault();
+                        }
+                      }}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[^0-9.]/g, "");
+                      }}
                     />
                   </div>
                 </div>

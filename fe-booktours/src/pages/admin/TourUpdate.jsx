@@ -434,6 +434,21 @@ const TourUpdate = () => {
                               onChange={(e) =>
                                 setTour({ ...tour, maxPeople: e.target.value })
                               }
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "-" ||
+                                  e.key === "e" ||
+                                  e.key === "E"
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                  /[^0-9.]/g,
+                                  ""
+                                );
+                              }}
                             />
                           </div>
                         </div>
@@ -453,6 +468,21 @@ const TourUpdate = () => {
                               onChange={(e) =>
                                 setTour({ ...tour, price: e.target.value })
                               }
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "-" ||
+                                  e.key === "e" ||
+                                  e.key === "E"
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                  /[^0-9.]/g,
+                                  ""
+                                );
+                              }}
                             />
                           </div>
                         </div>
@@ -472,6 +502,21 @@ const TourUpdate = () => {
                               onChange={(e) =>
                                 setTour({ ...tour, roomPrice: e.target.value })
                               }
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "-" ||
+                                  e.key === "e" ||
+                                  e.key === "E"
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                  /[^0-9.]/g,
+                                  ""
+                                );
+                              }}
                             />
                           </div>
                         </div>
@@ -839,6 +884,21 @@ const TourUpdate = () => {
                                 price: e.target.value,
                               })
                             }
+                            onKeyDown={(e) => {
+                              if (
+                                e.key === "-" ||
+                                e.key === "e" ||
+                                e.key === "E"
+                              ) {
+                                e.preventDefault();
+                              }
+                            }}
+                            onInput={(e) => {
+                              e.target.value = e.target.value.replace(
+                                /[^0-9.]/g,
+                                ""
+                              );
+                            }}
                           />
                         </div>
                       </div>

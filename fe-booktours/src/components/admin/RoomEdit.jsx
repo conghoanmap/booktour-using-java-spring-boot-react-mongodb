@@ -1,4 +1,5 @@
 import {
+  CloseButton,
   Dialog,
   DialogTitle,
   Transition,
@@ -8,6 +9,7 @@ import { CheckIcon, CubeIcon, PlusIcon } from "@heroicons/react/outline";
 import React, { Fragment, useEffect, useState } from "react";
 import { initTWE, Carousel } from "tw-elements";
 import HotelService from "../../services/HotelService";
+import { IoClose } from "react-icons/io5";
 
 const RoomEdit = (props) => {
   const [newImage, setNewImage] = useState("");
@@ -21,7 +23,7 @@ const RoomEdit = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(roomType);
+    // console.log(roomType);
   }, [roomType]);
 
   return (
@@ -122,6 +124,21 @@ const RoomEdit = (props) => {
                                   roomCapacity: e.target.value,
                                 });
                               }}
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "-" ||
+                                  e.key === "e" ||
+                                  e.key === "E"
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                  /[^0-9.]/g,
+                                  ""
+                                );
+                              }}
                             />
                           </div>
                         </div>
@@ -143,6 +160,21 @@ const RoomEdit = (props) => {
                                   ...roomType,
                                   roomArea: e.target.value,
                                 });
+                              }}
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "-" ||
+                                  e.key === "e" ||
+                                  e.key === "E"
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                  /[^0-9.]/g,
+                                  ""
+                                );
                               }}
                             />
                           </div>
@@ -166,6 +198,21 @@ const RoomEdit = (props) => {
                                   roomPrice: e.target.value,
                                 });
                               }}
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "-" ||
+                                  e.key === "e" ||
+                                  e.key === "E"
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                  /[^0-9.]/g,
+                                  ""
+                                );
+                              }}
                             />
                           </div>
                         </div>
@@ -187,6 +234,21 @@ const RoomEdit = (props) => {
                                   ...roomType,
                                   numberOfRooms: e.target.value,
                                 });
+                              }}
+                              onKeyDown={(e) => {
+                                if (
+                                  e.key === "-" ||
+                                  e.key === "e" ||
+                                  e.key === "E"
+                                ) {
+                                  e.preventDefault();
+                                }
+                              }}
+                              onInput={(e) => {
+                                e.target.value = e.target.value.replace(
+                                  /[^0-9.]/g,
+                                  ""
+                                );
                               }}
                             />
                           </div>
@@ -353,6 +415,18 @@ const RoomEdit = (props) => {
                             <li key={index} className="flex gap-1">
                               <CheckIcon className="h-5 w-5 my-auto text-teal-400" />
                               <span>{facility}</span>
+                              <IoClose
+                                className="h-5 w-5 my-auto text-red-400"
+                                onClick={() => {
+                                  setRoomType({
+                                    ...roomType,
+                                    roomFacilities:
+                                      roomType.roomFacilities.filter(
+                                        (item, i) => i !== index
+                                      ),
+                                  });
+                                }}
+                              />
                             </li>
                           ))}
                         </ul>
@@ -398,6 +472,17 @@ const RoomEdit = (props) => {
                             <li key={index} className="flex gap-1">
                               <CubeIcon className="h-5 w-5 my-auto text-teal-400" />
                               <span>{detail}</span>
+                              <IoClose
+                                className="h-5 w-5 my-auto text-red-400"
+                                onClick={() => {
+                                  setRoomType({
+                                    ...roomType,
+                                    roomDetails: roomType.roomDetails.filter(
+                                      (item, i) => i !== index
+                                    ),
+                                  });
+                                }}
+                              />
                             </li>
                           ))}
                         </ul>

@@ -7,7 +7,7 @@ export default class HotelService {
   // Xem các khách sạn
   static async getHotels(hotelQuery) {
     let url = `${this.BASE_URL}?hotelName=${hotelQuery.hotelName}&locationId=${hotelQuery.locationId}&minPrice=${hotelQuery.minPrice}&maxPrice=${hotelQuery.maxPrice}&active=${hotelQuery.active}&sortBy=${hotelQuery.sortBy}&sortType=${hotelQuery.sortType}&page=${hotelQuery.page}&limit=${hotelQuery.limit}`;
-    console.log(url);
+    // console.log(url);
 
     try {
       const response = await axios.get(`${url}`);
@@ -154,7 +154,7 @@ export default class HotelService {
   // Xem danh sách đặt phòng của 1 khách sạn vào 1 ngày cụ thể
   static async getBookingByDate(hotelCode, date) {
     try {
-      console.log(`${this.ADMIN_URL}/view-booking-room/${hotelCode}?date=${date}`);
+      // console.log(`${this.ADMIN_URL}/view-booking-room/${hotelCode}?date=${date}`);
       
       const response = await axios.get(
         `${this.ADMIN_URL}/view-booking-room/${hotelCode}?date=${date}`,

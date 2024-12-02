@@ -15,7 +15,7 @@ const DetailBookRide = () => {
           airportTransferId,
           bookRideId
         );
-        console.log(response.data);
+        // console.log(response.data);
         if (response.status === 200) {
           setBookRide(response.data);
         }

@@ -40,12 +40,25 @@ const Login = () => {
         navigate(response.data?.verifiedEmail ? "/" : "/verify-email");
       }
     } catch (error) {
-      console.log(error.response.data);
+      // console.log(error.response.data);
       if (error?.response?.status === 400) {
         setFormError(error?.response?.data);
         setError("");
         alert("Đăng nhập thất bại, vui lòng thử lại sau");
       }
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if(formData.email === ""){
+      alert("Vui lòng nhập email của bạn");
+      return;
+    }
+    try {
+      const response = await AccountService.resetPassword(formData.email);
+      alert(response.message);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -123,12 +136,12 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <Link
-                  to="#"
-                  className="font-medium text-sky-600 hover:text-sky-500"
+                <p
+                  className="font-medium text-sky-600 hover:text-sky-500 cursor-pointer"
+                  onClick={handleForgotPassword}
                 >
                   Quên mật khẩu?
-                </Link>
+                </p>
               </div>
             </div>
             <div className="flex items-center justify-between">
