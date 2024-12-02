@@ -79,6 +79,7 @@ public class HotelService {
         hotelUpdate.setHotelPhone(hotel.getHotelPhone());
         hotelUpdate.setHotelEmail(hotel.getHotelEmail());
         hotelUpdate.setHotelDescription(hotel.getHotelDescription());
+        hotelUpdate.setRoomTypes(hotel.getRoomTypes());
         hotelUpdate.setHotelImage(hotel.getHotelImage());
         hotelUpdate.setHotelFacilities(hotel.getHotelFacilities());
         hotelUpdate.setActive(hotel.isActive());
@@ -106,8 +107,10 @@ public class HotelService {
         }
 
         // Lọc theo giá
-        query.addCriteria(Criteria.where("roomTypes.roomPrice").gte(hotelQuery.getMinPrice())
-                .lte(hotelQuery.getMaxPrice()));
+        if (hotelQuery.getMinPrice() <= hotelQuery.getMaxPrice()) {
+            query.addCriteria(Criteria.where("roomTypes.roomPrice").gte(hotelQuery.getMinPrice())
+                    .lte(hotelQuery.getMaxPrice()));
+        }
 
         // Sắp xếp
         if (hotelQuery.getSortBy().equals("price")) {
@@ -180,6 +183,13 @@ public class HotelService {
         if (!roomTypeOptional.isPresent()) {
             response.setStatus(404);
             response.setMessage("Không tìm thấy loại phòng");
+            return response;
+        }
+
+        // Ngày nhận phòng phải lớn hơn hoặc bằng ngày hiện tại
+        if (bookRoomHotelDto.getCheckInDate().isBefore(LocalDate.now())) {
+            response.setStatus(403);
+            response.setMessage("Ngày nhận phòng phải lớn hơn hoặc bằng ngày hiện tại");
             return response;
         }
 

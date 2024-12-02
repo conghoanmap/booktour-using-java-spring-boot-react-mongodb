@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import com.spring.be_booktours.dtos.account.RegisterRequest;
 import com.spring.be_booktours.services.UserService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -89,6 +91,12 @@ public class AccountController {
     @PostMapping("/contact")
     public ResponseEntity<?> contact(@Valid @RequestBody Contact contact) {
         return ResponseEntity.ok(userService.Contact(contact));
+    }
+
+    // Reset mật khẩu
+    @GetMapping("/reset-password/{email}")
+    public ResponseEntity<?> resetPassword(@Valid @Email @PathVariable String email) {
+        return ResponseEntity.ok(userService.ResetPassword(email));
     }
 
 }

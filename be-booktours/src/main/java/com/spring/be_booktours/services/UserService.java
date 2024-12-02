@@ -378,4 +378,41 @@ public class UserService {
         }
     }
 
+    public MyResponse<?> ResetPassword(String email) {
+        MyResponse<?> response = new MyResponse<>();
+
+        // Kiểm tra xem email có tồn tại không
+        Optional<AppUser> appuser = usersRepo.findByEmail(email);
+        if (appuser.isEmpty()) {
+            response.setStatus(404);
+            response.setMessage("Tài khoản không tồn tại!");
+            return response;
+        } else {
+            // Kiểm tra xem email đã xác nhận chưa
+            AppUser user = appuser.get();
+            if (!user.isVerifiedEmail()) {
+                response.setStatus(400);
+                response.setMessage("Email chưa được xác thực, vui lòng vào phần liên hệ để được cấp lại mật khẩu!");
+                return response;
+            }
+        }
+        // Tạo mật khẩu mới ngẫu nhiên và gửi mail
+        // Tạo mật khẩu có 20 kí tự chữ hoặc số ngẫu nhiên
+
+        String newPassword = "";
+        for (int i = 0; i < 20; i++) {
+            newPassword += (char) ((int) (Math.random() * 26) + 97);
+        }
+        emailSenderService.sendResetPasswordEmail(email, newPassword);
+
+        // Cập nhật mật khẩu mới vào db
+        AppUser user = appuser.get();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        usersRepo.save(user);
+        
+        response.setStatus(200);
+        response.setMessage("Gửi email cấp lại mật khẩu thành công!");
+        return response;
+    }
+
 }

@@ -55,4 +55,17 @@ public class EmailSenderService {
                 "Thông báo từ khách hàng: " + contact.getFullName() + "\n" + "Nội dung: " + contact.getMessage());
         javaMailSender.send(message);
     }
+
+    // Gửi email cấp lại mật khẩu
+    public void sendResetPasswordEmail(String toEmail, String newPassword) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("hoan39800@gmail.com");
+        message.setTo(toEmail);
+        message.setSubject("Gotrip - Cấp lại mật khẩu");
+        message.setText(
+                "Chúng tôi xin gửi mật khẩu mới đến cho bạn, vui lòng đăng nhập và đổi mật khẩu mới ngay sau khi đăng nhập. Mật khẩu mới là: "
+                        + newPassword);
+        javaMailSender.send(message);
+    }
+
 }
